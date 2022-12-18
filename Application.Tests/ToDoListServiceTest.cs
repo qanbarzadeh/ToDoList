@@ -46,7 +46,7 @@ namespace Application.Tests
         //Give an empty database when a pending task is added
         //GetTask should return the task
         [Fact]
-        public async Task DatabaseIsNotEmpty()
+        public async Task ShouldAddaPendingTask()
         {
             //arrange
             var taskDatabase = new TaskDatabase();
@@ -59,5 +59,8 @@ namespace Application.Tests
             Assert.NotEmpty(tasks); 
 
         }
+
+       
+
     }
 }

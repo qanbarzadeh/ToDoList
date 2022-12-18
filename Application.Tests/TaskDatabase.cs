@@ -12,20 +12,7 @@ namespace Application.Tests
         }
 
 
-        //public void AddCompletedTask()
-        // {
-        //     var todoList = new List<ToDo>()
-        //      {
-        //          new ToDo()
-        //          {
-
-        //              IsDone = true
-        //          }
-
-        //      };
-
-        // }
-
+   
         public Task<List<ToDo>> GetPendingTaskList()
         {
             var todoList = new List<ToDo>()
