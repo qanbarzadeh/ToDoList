@@ -6,21 +6,18 @@ namespace Application.Tests
 {
     internal class ToDoListService
     {
+
         public ToDoListService()
         {
         }
 
-        public Task<List<ToDo>> GetPendingsTasks()
+        public async  Task<List<ToDo>> GetPendingsTasks()
         {
-            var todoList = new List<ToDo>()
-             {
-                 new ToDo()
-                 {
-                     IsDone = false
+            var taskDb = new TaskDatabase();
 
-                 }                 
-             };
-            return Task.FromResult(todoList); 
+            var pendingTaskList = await  taskDb.GetPendingTaskList();
+
+            return pendingTaskList; 
         }
     }
 }
