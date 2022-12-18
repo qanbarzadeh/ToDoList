@@ -16,9 +16,12 @@ namespace Application.Tests
         public async Task Returns_NonPassedTasks()
         {
             var toDoListService = new ToDoListService();
-            var pendingTasks = await toDoListService.GetPendingsTasks(); 
+            var pendingTasks = await toDoListService.GetPendingsTasks();
+
+            Assert.NotNull(pendingTasks);
+            Assert.Collection(pendingTasks, t => Assert.False(t.IsDone));  
         }
         
-
+       
     }
 }
