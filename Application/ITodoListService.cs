@@ -9,6 +9,6 @@ namespace Application
 {
     public interface ITodoListService
     {
-        Task List<ToDo> GetTodoList(); 
+        //Task<List<ToDo>> GetTodoList(); 
     }
 }
