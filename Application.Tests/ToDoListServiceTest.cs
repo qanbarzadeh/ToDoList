@@ -12,7 +12,7 @@ namespace Application.Tests
     internal class ToDoListServiceTest
     {
         [Fact]
-        public Returns_NonPassedTasks()
+        public Returns_NonPassedTasks()W
         {
 
 
