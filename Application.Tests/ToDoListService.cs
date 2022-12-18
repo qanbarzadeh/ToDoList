@@ -10,9 +10,17 @@ namespace Application.Tests
         {
         }
 
-        public async Task<List<ToDo>> GetPendingsTasks()
+        public Task<List<ToDo>> GetPendingsTasks()
         {
-             throw new NotImplementedException();
+            var todoList = new List<ToDo>()
+             {
+                 new ToDo()
+                 {
+                     IsDone = false
+
+                 }                 
+             };
+            return Task.FromResult(todoList); 
         }
     }
 }
