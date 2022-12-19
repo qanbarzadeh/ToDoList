@@ -16,7 +16,8 @@ namespace Application.Tests
         public Task<List<ToDo>> GetPendingTaskList()
         {
 
-            var pendingTasks = tasks.Where(t => t.Completed == false).ToList(); 
+            var pendingTasks = tasks.Where(t => t.Completed == false)
+                .OrderBy(t => t.Id).ToList();
             return Task.FromResult(pendingTasks);
         }
 
@@ -35,7 +36,7 @@ namespace Application.Tests
         public Task<List<ToDo>> GetOverDueTasks()
         {
             var overDueTasks = tasks.Where(t => t.Completed == false
-            && t.DueDate > DateTime.Now).ToList();
+            && t.DueDate < DateTime.Now).ToList();
             return Task.FromResult(overDueTasks); 
         }
 

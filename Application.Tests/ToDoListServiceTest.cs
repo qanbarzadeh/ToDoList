@@ -34,10 +34,44 @@ namespace Application.Tests
             //assert
             Assert.NotNull(pendingTasks);
             Assert.All(pendingTasks, t => Assert.False(t.Completed));
-            
+            Assert.Collection(pendingTasks,
+                t => Assert.Equal(toDoList[1].Id, t.Id),
+                t => Assert.Equal(toDoList[3].Id, t.Id)); 
         }
+        [Fact]
+        public async Task GetsOverdueTasks()
+        { 
 
-               
+            var now = DateTime.Now;
+            //arrange
+            var toDoList = new List<ToDo>()
+            {
+                new ToDo(){ Id = 1, Title = "T1",Completed = true},
+                new ToDo(){ Id = 2, Title = "T2",Completed = false, DueDate = now.AddDays(-1) },
+                new ToDo(){ Id = 3, Title = "T3",Completed = true , DueDate = now.AddDays(-1) },
+                new ToDo(){ Id = 4, Title = "T4",Completed = false , DueDate = now.AddSeconds(-1)},
+                new ToDo(){ Id = 5, Title = "T5",Completed = false , DueDate = now.AddDays(+2)}
+            };
+            taskDatabase.AddTasks(toDoList);
+            
+
+            //action
+            var toDoListService = new ToDoListService(taskDatabase);
+            var  overDueTasks = await toDoListService.GetOverDueTasks();
+
+            //Assert
+            Assert.NotEmpty(overDueTasks);
+            Assert.All(overDueTasks, t =>
+            {
+                Assert.True(now > t.DueDate);
+                Assert.False(t.Completed);            
+            }); 
+
+
+        }
+            
+
+
         public  static ToDo CreateCompletedTask()
         {
             var Todo = new ToDo()
@@ -94,36 +128,6 @@ namespace Application.Tests
                 Assert.Equal(toDo.Id, t.Id);
                 Assert.Equal(toDo.Title, t.Title);
             });            
-        }
-
-        [Fact]
-        public async Task  ShouldReturnAnOverdueTask()
-        {
-            //arrange
-         
-            ToDo todo = new ToDo()
-            {
-                Completed = false,
-                DueDate = new DateTime(2022,12,20)
-
-            }; 
-
-            //action
-            var toDoListService = new ToDoListService(taskDatabase);
-            taskDatabase.AddTask(todo);
-            var tasks =  await toDoListService.GetOverDueTasks();
-
-            //Assert
-            Assert.NotEmpty(tasks);
-            Assert.Collection(tasks, t =>
-            {
-                Assert.False(t.Completed);
-                Assert.Equal(todo.Id, t.Id);
-
-            });
-
-        }
-
-       
+        }               
     }
 }
