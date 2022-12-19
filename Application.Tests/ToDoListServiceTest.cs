@@ -5,39 +5,63 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Moq;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.Tests
 {
     public class ToDoListServiceTest
-    {
+    {        
+        TaskDatabase taskDatabase = new TaskDatabase();
 
-        //given two taks one is pending, one is not pending when  GetPendingTasks() is called 
-        //it should return the Pending task; 
-        //[Fact]
-        //public async Task Returns_NonPassedTasks()
-        //{
-        //    //arrange
-        //    var taskDatabase = new TaskDatabase();
-        //    taskDatabase.AddPendingTask();
-        //    taskDatabase.AddCompletedTask(); 
+        [Fact]
+        public async Task GetsPendingTasks()
+        {
 
-        //    //action
-        //    var toDoListService = new ToDoListService();
-        //    var pendingTasks = await toDoListService.GetPendingsTasks();
+            //arrange            
+            var toDoList = new List<ToDo>()
+            {
+                new ToDo(){ Id = 1, Title = "T1",Completed = true},
+                new ToDo(){ Id = 2, Title = "T2",Completed = false},
+                new ToDo(){ Id = 3, Title = "T3",Completed = true},
+                new ToDo(){ Id = 4, Title = "T4",Completed = false}
+            }; 
+            
+            taskDatabase.AddTasks(toDoList);            
+            //action
+            var toDoListService = new ToDoListService(taskDatabase);
+            var pendingTasks = await toDoListService.GetPendingsTasks();
 
-        //    //assert
-        //    Assert.NotNull(pendingTasks);
-        //    Assert.Collection(pendingTasks, t => Assert.False(t.IsDone));  
-        //}               
+            //assert
+            Assert.NotNull(pendingTasks);
+            Assert.All(pendingTasks, t => Assert.False(t.Completed));
+            
+        }
+
+               
+        public  static ToDo CreateCompletedTask()
+        {
+            var Todo = new ToDo()
+            {
+                Completed = true
+
+            };
+            return Todo;                  
+        }
+
+
+        
     }
 
     public  class TaskDatabaseTest
     {
+
+        TaskDatabase taskDatabase = new TaskDatabase();
+
         [Fact]
         public  async void DatabaseIsInitialyEmpty()
         {
             
-            var taskDatabase = new TaskDatabase();
+            
             var tasks = await  taskDatabase.GetTasks(); 
             
             Assert.Empty(tasks); 
@@ -50,17 +74,56 @@ namespace Application.Tests
         {
             //arrange
             var taskDatabase = new TaskDatabase();
-            taskDatabase.AddPendingTask();
+            var toDo = new ToDo()
+            {
+                Id = 1, 
+                Title = "T1", 
+                Completed = false
+
+            }; 
+
+            taskDatabase.AddTask(toDo);
 
             //action
             var tasks = await taskDatabase.GetTasks();
 
             //Assert
-            Assert.NotEmpty(tasks); 
+            Assert.NotEmpty(tasks);
+            Assert.Collection(tasks, t => {
+                Assert.False(t.Completed);
+                Assert.Equal(toDo.Id, t.Id);
+                Assert.Equal(toDo.Title, t.Title);
+            });            
+        }
+
+        [Fact]
+        public async Task  ShouldReturnAnOverdueTask()
+        {
+            //arrange
+         
+            ToDo todo = new ToDo()
+            {
+                Completed = false,
+                DueDate = new DateTime(2022,12,20)
+
+            }; 
+
+            //action
+            var toDoListService = new ToDoListService(taskDatabase);
+            taskDatabase.AddTask(todo);
+            var tasks =  await toDoListService.GetOverDueTasks();
+
+            //Assert
+            Assert.NotEmpty(tasks);
+            Assert.Collection(tasks, t =>
+            {
+                Assert.False(t.Completed);
+                Assert.Equal(todo.Id, t.Id);
+
+            });
 
         }
 
        
-
     }
 }
