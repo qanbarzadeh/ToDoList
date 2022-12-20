@@ -7,12 +7,11 @@ namespace Application.Tests
     public class TaskDatabase
     {
         public List<ToDo> tasks = new List<ToDo>(); 
-        
+                
         public TaskDatabase()
         {            
 
         }
-
         public Task<List<ToDo>> GetPendingTaskList()
         {
 
@@ -26,7 +25,7 @@ namespace Application.Tests
             tasks.Add(item);            
         }
         
-        public  Task<List<ToDo>> GetTasks()
+        public   Task<List<ToDo>> GetTasks()
         {
             
             return  Task.FromResult(tasks); 
