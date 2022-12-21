@@ -1,12 +1,5 @@
 ﻿using Domain.Todo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Moq;
-using System.ComponentModel.DataAnnotations;
-using Castle.DynamicProxy.Generators;
 
 namespace Application.Tests
 {
@@ -47,26 +40,27 @@ namespace Application.Tests
         {
 
             //arrange            
-            var toDoList = new List<ToDoTask>()
+            var mockedPendingTasks = new List<ToDoTask>()
             {
-                new ToDoTask(){ Id = 1, Title = "T1",Completed = true},
                 new ToDoTask(){ Id = 2, Title = "T2",Completed = false},
-                new ToDoTask(){ Id = 3, Title = "T3",Completed = true},
                 new ToDoTask(){ Id = 4, Title = "T4",Completed = false}
             };
 
-            taskDatabase.AddTasks(toDoList);
+            var mockedRepository = new Mock<ITodoTaskRepository>();
+            mockedRepository.Setup(c => c.GetPendingTasks()).Returns(Task.FromResult(mockedPendingTasks));
+
             //action
-            var toDoListService = new TodoTasksService(taskDatabase);
+            var toDoListService = new TodoTasksService(mockedRepository.Object);
             var pendingTasks = await toDoListService.GetPendingsTasks();
 
             //assert
             Assert.NotNull(pendingTasks);
             Assert.All(pendingTasks, t => Assert.False(t.Completed));
             Assert.Collection(pendingTasks,
-                t => Assert.Equal(toDoList[1].Id, t.Id),
-                t => Assert.Equal(toDoList[3].Id, t.Id));
+                t => Assert.Equal(pendingTasks[0].Id, t.Id),
+                t => Assert.Equal(pendingTasks[1].Id, t.Id));
         }
+
         [Fact]
         public async Task GetsOverdueTasks()
         {

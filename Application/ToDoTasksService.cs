@@ -7,15 +7,15 @@ namespace Application.Tests
     public class TodoTasksService : ITodoTasksService
     {
         int lastId = 1;
-        ITodoTaskRepository _taskDatabase;
+        ITodoTaskRepository todoTaskRepository;
         public TodoTasksService(
-            ITodoTaskRepository taskDatabase)
+            ITodoTaskRepository todoTaskRepository)
         {
-            _taskDatabase = taskDatabase;
+            this.todoTaskRepository = todoTaskRepository;
         }
         public async Task<List<ToDoTask>> GetPendingsTasks()
         {
-            var pendingTaskList = await _taskDatabase.GetPendingTasks();
+            var pendingTaskList = await todoTaskRepository.GetPendingTasks();
 
             return pendingTaskList;
         }
@@ -30,13 +30,13 @@ namespace Application.Tests
             toDo.Title = task.Title;
             toDo.DueDate = task.DueDate;
 
-            await _taskDatabase.AddTask(toDo);
+            await todoTaskRepository.AddTask(toDo);
 
             return toDo;
         }
         public async Task<List<ToDoTask>> GetOverDueTasks()
         {
-            var overDueTasks = await _taskDatabase.GetOverDueTasks();           
+            var overDueTasks = await todoTaskRepository.GetOverDueTasks();           
             return overDueTasks;
         }
     }
