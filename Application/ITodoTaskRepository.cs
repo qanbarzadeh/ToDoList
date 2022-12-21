@@ -1,4 +1,5 @@
 ﻿using Domain.Todo;
+using System.Linq.Expressions;
 
 namespace Application
 {
@@ -6,7 +7,6 @@ namespace Application
     {
         Task AddTask(ToDoTask item);
         Task<List<ToDoTask>> GetOverDueTasks();
-        Task<List<ToDoTask>> GetPendingTaskList();
-        Task<List<ToDoTask>> GetTasks();
+        Task<List<ToDoTask>> GetPendingTaskList();       
     }
 }

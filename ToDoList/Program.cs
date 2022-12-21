@@ -14,7 +14,7 @@ namespace ToDoList
 
             // Add services to the container.
             builder.Services.AddAuthorization();
-            builder.Services.AddDbContext<ToDoDb>(opt => opt.UseInMemoryDatabase("ToDoListDb"));
+            builder.Services.AddDbContext<TodoDbContext>(opt => opt.UseInMemoryDatabase("ToDoListDb"));
             //builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddEndpointsApiExplorer();
@@ -39,7 +39,7 @@ namespace ToDoList
 
 
             //Create a Todo Task
-            app.MapPost("/todolist/createTask", async (ToDoTask todoTask, ToDoDb db) =>
+            app.MapPost("/todolist/createTask", async (ToDoTask todoTask, TodoDbContext db) =>
             {
                 db.ToDoTasks.Add(todoTask);
                 await db.SaveChangesAsync();

@@ -1,5 +1,6 @@
 ﻿
 using Domain.Todo;
+using System.Linq;
 
 namespace Application.Tests
 {
@@ -7,7 +8,8 @@ namespace Application.Tests
     {
         int lastId = 1;
         ITodoTaskRepository _taskDatabase;
-        public TodoTasksService(ITodoTaskRepository taskDatabase)
+        public TodoTasksService(
+            ITodoTaskRepository taskDatabase)
         {
             _taskDatabase = taskDatabase;
         }
@@ -34,7 +36,7 @@ namespace Application.Tests
         }
         public async Task<List<ToDoTask>> GetOverDueTasks()
         {
-            var overDueTasks = await _taskDatabase.GetOverDueTasks();
+            var overDueTasks = await _taskDatabase.GetOverDueTasks();           
             return overDueTasks;
         }
     }

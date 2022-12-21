@@ -12,7 +12,7 @@ namespace Application.Tests
 {
     public class TodoTasksServiceTest
     {
-        TodoTaskDatabase taskDatabase = new TodoTaskDatabase();
+        FakeTodoTaskDatabase taskDatabase = new FakeTodoTaskDatabase();
 
         [Fact]
         public async Task Creates_a_Task()
@@ -108,7 +108,7 @@ namespace Application.Tests
     public class TaskDatabaseTest
     {
 
-        TaskDatabase taskDatabase = new TaskDatabase();
+        FakeTodoTaskDatabase taskDatabase = new ();
 
         [Fact]
         public async void DatabaseIsInitialyEmpty()
@@ -126,14 +126,14 @@ namespace Application.Tests
         public async Task ShouldAddaPendingTask()
         {
             //arrange
-            var taskDatabase = new TaskDatabase();
+            var taskDatabase = new FakeTodoTaskDatabase();
             var toDo = new ToDoTask()
             {
                 Id = 1,
                 Title = "T1",
                 Completed = false
             };
-            taskDatabase.AddTask(toDo);
+            await taskDatabase.AddTask(toDo);
             //action
             var tasks = await taskDatabase.GetTasks();
 

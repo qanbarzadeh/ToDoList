@@ -14,6 +14,5 @@ namespace Domain.Todo
         public DateTime? DueDate { get; set; }
         public bool Completed { get; set; } //should it be here in the Domain ?
         public string status { get; set; } = string.Empty;
-
     }
 }
