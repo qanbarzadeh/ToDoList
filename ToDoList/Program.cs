@@ -47,30 +47,30 @@ namespace ToDoList
                 return Results.Created($"/todolist/{todoTask.Id}", todoTask);
             });
 
-            //Get list of Todo Tasks
-            app.MapGet("/todolist/listtasks", async (ToDoDb db) => await db.ToDoTasks.ToListAsync());
+            ////Get list of Todo Tasks
+            //app.MapGet("/todolist/listtasks", async (ToDoDb db) => );
 
-            //Get list of complemeted Todo tasks
-            app.MapGet("/todolist/completed", async (ToDoDb db) => await db.ToDoTasks.Where(task => task.IsTaskComplete).ToListAsync());
+            ////Get list of complemeted Todo tasks
+            //app.MapGet("/todolist/completed", async (ToDoDb db) => );
 
-            //Get list of pending tasks
-            app.MapGet("/todolist/pending", async (ToDoDb db) => await db.ToDoTasks.Where(task => task.IsTaskComplete == false).ToListAsync()); 
+            ////Get list of pending tasks
+            //app.MapGet("/todolist/pending", async (ToDoDb db) =>)); 
 
-            //Get list of overdue tasks
-            app.MapGet("/todolist/overdue", async (ToDoDb db) => await db.ToDoTasks.Where( task => task.CurrentDate > task.DueDate && task.IsTaskComplete == false).ToListAsync());
+            ////Get list of overdue tasks
+            //app.MapGet("/todolist/overdue", async (ToDoDb db) =>);
 
             //Edit a Task
-            app.MapPut("/todolist/{id}", async (int id, ToDoDb db, ToDoTask target) =>                
-            {
-                var todo = await db.ToDoTasks.FindAsync(id);
-                if (todo == null) return Results.NotFound();
+            //app.MapPut("/todolist/{id}", async (int id, ToDoDb db, ToDoTask target) =>                
+            //{
+            //    var todo = await db.ToDoTasks.FindAsync(id);
+            //    if (todo == null) return Results.NotFound();
 
-                todo.Title = target.Title; 
-                todo.DueDate = target.DueDate;
-                todo.IsTaskComplete = target.IsTaskComplete;
-                await db.SaveChangesAsync();
-                return Results.NoContent(); 
-            }); 
+            //    todo.Title = target.Title; 
+            //    todo.DueDate = target.DueDate;
+            //    todo.IsTaskComplete = target.IsTaskComplete;
+            //    await db.SaveChangesAsync();
+            //    return Results.NoContent(); 
+            //}); 
 
 
 

@@ -1,5 +1,6 @@
 ﻿
 using Domain.Todo;
+using Infrastructure;
 
 namespace Application.Tests
 
@@ -7,8 +8,8 @@ namespace Application.Tests
     internal class ToDoTasksService
     {
         int lastId = 1;
-        TaskDatabase _taskDatabase;  
-        public ToDoTasksService(TaskDatabase taskDatabase)
+        ITodoTaskDatabase _taskDatabase;  
+        public ToDoTasksService(ITodoTaskDatabase taskDatabase)
         {
             _taskDatabase = taskDatabase;
 

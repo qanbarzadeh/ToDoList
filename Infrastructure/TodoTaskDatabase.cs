@@ -1,14 +1,14 @@
 ﻿using Domain.Todo;
 
 
-namespace Application.Tests
+namespace Infrastructure
 {
-    public class TaskDatabase
+    internal class TodoTaskDatabase : ITodoTaskDatabase
     {
-        public List<ToDoTask> tasks = new List<ToDoTask>(); 
-                
-        public TaskDatabase()
-        {            
+        public List<ToDoTask> tasks = new List<ToDoTask>();
+
+        public TodoTaskDatabase()
+        {
 
         }
         public Task<List<ToDoTask>> GetPendingTaskList()
@@ -19,13 +19,13 @@ namespace Application.Tests
         }
 
         public void AddTask(ToDoTask item)
-        {         
-            tasks.Add(item);            
+        {
+            tasks.Add(item);
         }
-        
-        public   Task<List<ToDoTask>> GetTasks()
-        {            
-            return  Task.FromResult(tasks); 
+
+        public Task<List<ToDoTask>> GetTasks()
+        {
+            return Task.FromResult(tasks);
         }
 
         //List OverDue taksk 
@@ -33,13 +33,13 @@ namespace Application.Tests
         {
             var overDueTasks = tasks.Where(t => t.Completed == false
             && t.DueDate < DateTime.Now).ToList();
-            return Task.FromResult(overDueTasks); 
+            return Task.FromResult(overDueTasks);
         }
 
         internal void AddTasks(List<ToDoTask> Tasks)
         {
             tasks.AddRange(Tasks);
-            
+
         }
     }
 }

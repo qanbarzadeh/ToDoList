@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Todo; 
-
-
+﻿using Domain.Todo;
 
 namespace Application
 {
-    public interface IToDoListRepository //Tentity 
-    
+    public interface IToDoListRepository 
     {
-        public IQueryable<ToDo> ToDo { get; }
-        Task<List<ToDo>> GetOverDueTasks();
-        Task<List<ToDo>> GetPendingTasks();
+        public IQueryable<ToDoTask> ToDo { get; }
+        Task<List<ToDoTask>> GetOverDueTasks();
+        Task<List<ToDoTask>> GetPendingTasks();
         Task CreateTask(string Title, DateTime duedate);
         Task EditTask(string Title); 
-        //todo imeplenmt this methods in Infrastructure layer 
+       
     }
     
 }

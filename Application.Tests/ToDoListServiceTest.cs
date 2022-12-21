@@ -19,11 +19,14 @@ namespace Application.Tests
         {
             //arrange              
             var createTask = new CreatTask()
-            { Title = "Hit the Gym", DueDate = DateTime.Now.AddDays(1)};
+            {
+                Title = "Hit the Gym",
+                DueDate = DateTime.Now.AddDays(1)
+            };
 
 
             //action 
-            var todoListService = new ToDoListService(taskDatabase);
+            var todoListService = new ToDoTasksService(taskDatabase);
             todoListService.CreateTask(createTask);
 
 
@@ -32,10 +35,10 @@ namespace Application.Tests
             Assert.NotEmpty(tasks);
             Assert.Collection(tasks, t =>
             {
-                Assert.NotNull(t.Title); 
+                Assert.NotNull(t.Title);
                 Assert.Equal(createTask.Title, t.Title);
                 Assert.NotNull(t.DueDate);
-            }); 
+            });
 
         }
 
@@ -44,17 +47,17 @@ namespace Application.Tests
         {
 
             //arrange            
-            var toDoList = new List<ToDo>()
+            var toDoList = new List<ToDoTask>()
             {
-                new ToDo(){ Id = 1, Title = "T1",Completed = true},
-                new ToDo(){ Id = 2, Title = "T2",Completed = false},
-                new ToDo(){ Id = 3, Title = "T3",Completed = true},
-                new ToDo(){ Id = 4, Title = "T4",Completed = false}
+                new ToDoTask(){ Id = 1, Title = "T1",Completed = true},
+                new ToDoTask(){ Id = 2, Title = "T2",Completed = false},
+                new ToDoTask(){ Id = 3, Title = "T3",Completed = true},
+                new ToDoTask(){ Id = 4, Title = "T4",Completed = false}
             };
 
             taskDatabase.AddTasks(toDoList);
             //action
-            var toDoListService = new ToDoListService(taskDatabase);
+            var toDoListService = new ToDoTasksService(taskDatabase);
             var pendingTasks = await toDoListService.GetPendingsTasks();
 
             //assert
@@ -70,19 +73,19 @@ namespace Application.Tests
 
             var now = DateTime.Now;
             //arrange
-            var toDoList = new List<ToDo>()
+            var toDoList = new List<ToDoTask>()
             {
-                new ToDo(){ Id = 1, Title = "T1",Completed = true},
-                new ToDo(){ Id = 2, Title = "T2",Completed = false, DueDate = now.AddDays(-1) },
-                new ToDo(){ Id = 3, Title = "T3",Completed = true , DueDate = now.AddDays(-1) },
-                new ToDo(){ Id = 4, Title = "T4",Completed = false , DueDate = now.AddSeconds(-1)},
-                new ToDo(){ Id = 5, Title = "T5",Completed = false , DueDate = now.AddDays(+2)}
+                new ToDoTask(){ Id = 1, Title = "T1",Completed = true},
+                new ToDoTask(){ Id = 2, Title = "T2",Completed = false, DueDate = now.AddDays(-1) },
+                new ToDoTask(){ Id = 3, Title = "T3",Completed = true , DueDate = now.AddDays(-1) },
+                new ToDoTask(){ Id = 4, Title = "T4",Completed = false , DueDate = now.AddSeconds(-1)},
+                new ToDoTask(){ Id = 5, Title = "T5",Completed = false , DueDate = now.AddDays(+2)}
             };
             taskDatabase.AddTasks(toDoList);
 
 
             //action
-            var toDoListService = new ToDoListService(taskDatabase);
+            var toDoListService = new ToDoTasksService(taskDatabase);
             var overDueTasks = await toDoListService.GetOverDueTasks();
 
             //Assert
@@ -93,9 +96,9 @@ namespace Application.Tests
                 Assert.False(t.Completed);
             });
         }
-        public static ToDo CreateCompletedTask()
+        public static ToDoTask CreateCompletedTask()
         {
-            var Todo = new ToDo()
+            var Todo = new ToDoTask()
             {
                 Completed = true
             };
@@ -125,12 +128,11 @@ namespace Application.Tests
         {
             //arrange
             var taskDatabase = new TaskDatabase();
-            var toDo = new ToDo()
+            var toDo = new ToDoTask()
             {
                 Id = 1,
                 Title = "T1",
                 Completed = false
-
             };
             taskDatabase.AddTask(toDo);
             //action

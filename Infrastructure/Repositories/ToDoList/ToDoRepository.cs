@@ -9,7 +9,7 @@ namespace Infrastructure.Repositories.ToDo
 {
     internal class ToDoRepository : IToDoListRepository
     {
-        public IQueryable<Domain.Todo.ToDo> ToDo => throw new NotImplementedException();
+        public IQueryable<Domain.Todo.ToDoTask> ToDo => throw new NotImplementedException();
 
         //it should be add . delete , update 
 
@@ -23,12 +23,12 @@ namespace Infrastructure.Repositories.ToDo
             throw new NotImplementedException();
         }
 
-        public Task<List<Domain.Todo.ToDo>> GetOverDueTasks()
+        public Task<List<Domain.Todo.ToDoTask>> GetOverDueTasks()
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Domain.Todo.ToDo>> GetPendingTasks()
+        public Task<List<Domain.Todo.ToDoTask>> GetPendingTasks()
         {
             throw new NotImplementedException();
         }

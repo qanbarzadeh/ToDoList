@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Todo
 {
-    public class ToDo
-   {        
+    public class ToDoTask
+    {        
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public DateTime? DueDate { get; set; }
