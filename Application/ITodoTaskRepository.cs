@@ -1,10 +1,10 @@
 ﻿using Domain.Todo;
 
-namespace Infrastructure
+namespace Application
 {
-    public interface ITodoTaskDatabase
+    public interface ITodoTaskRepository
     {
-        void AddTask(ToDoTask item);
+        Task AddTask(ToDoTask item);
         Task<List<ToDoTask>> GetOverDueTasks();
         Task<List<ToDoTask>> GetPendingTaskList();
         Task<List<ToDoTask>> GetTasks();

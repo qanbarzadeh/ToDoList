@@ -1,9 +1,9 @@
 ﻿using Domain.Todo;
 
 
-namespace Infrastructure
+namespace Application.Tests
 {
-    internal class TodoTaskDatabase : ITodoTaskDatabase
+    internal class TodoTaskDatabase : ITodoTaskRepository
     {
         public List<ToDoTask> tasks = new List<ToDoTask>();
 
@@ -18,9 +18,10 @@ namespace Infrastructure
             return Task.FromResult(pendingTasks);
         }
 
-        public void AddTask(ToDoTask item)
+        public Task AddTask(ToDoTask item)
         {
             tasks.Add(item);
+            return Task.CompletedTask;
         }
 
         public Task<List<ToDoTask>> GetTasks()

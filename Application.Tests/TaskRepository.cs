@@ -1,12 +1,8 @@
-﻿using Application;
-using Domain.Todo;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+﻿using Domain.Todo;
 
-namespace Infrastructure
+namespace Application.Tests
 {
-    public class TaskRepository : ITaskRepository
+    public class TaskRepository : ITodoTaskRepository
     //TaskRepository 
     {
         int lastId = 0;
@@ -25,19 +21,16 @@ namespace Infrastructure
 
             return Task.FromResult(pendingTasks);
         }
-
         public Task AddTask(ToDoTask item)
         {
             item.Id = ++lastId;
             tasks.Add(item);
             return Task.CompletedTask;
         }
-
         public Task<List<ToDoTask>> GetTasks()
         {
             return Task.FromResult(tasks);
         }
-
         //List OverDue taksk 
         public Task<List<ToDoTask>> GetOverDueTasks()
         {
@@ -47,12 +40,10 @@ namespace Infrastructure
 
             return Task.FromResult(overDueTasks);
         }
-
         public void AddTasks(List<ToDoTask> Tasks)
         {
             tasks.AddRange(Tasks);
         }
-
         public Task UpdateTask(ToDoTask task)
         {
             task.Title = task.Title;

@@ -1,26 +1,23 @@
 ﻿
 using Domain.Todo;
-using Infrastructure;
 
 namespace Application.Tests
-
 {
-    internal class ToDoTasksService
+    public class TodoTasksService : ITodoTasksService
     {
         int lastId = 1;
-        ITodoTaskDatabase _taskDatabase;  
-        public ToDoTasksService(ITodoTaskDatabase taskDatabase)
+        ITodoTaskRepository _taskDatabase;
+        public TodoTasksService(ITodoTaskRepository taskDatabase)
         {
             _taskDatabase = taskDatabase;
-
         }
-        public async  Task<List<ToDoTask>> GetPendingsTasks()
-        {                     
+        public async Task<List<ToDoTask>> GetPendingsTasks()
+        {
             var pendingTaskList = await _taskDatabase.GetPendingTaskList();
 
-            return pendingTaskList; 
+            return pendingTaskList;
         }
-        public void CreateTask(CreatTask task)
+        public async Task<ToDoTask> CreateTask(CreatTask task)
         {
             ToDoTask toDo = new ToDoTask()
             {
@@ -29,16 +26,16 @@ namespace Application.Tests
                 DueDate = DateTime.Now.AddDays(1)
             };
             toDo.Title = task.Title;
-            toDo.DueDate = task.DueDate; 
+            toDo.DueDate = task.DueDate;
 
-            _taskDatabase.AddTask(toDo);
+            await _taskDatabase.AddTask(toDo);
+
+            return toDo;
         }
         public async Task<List<ToDoTask>> GetOverDueTasks()
         {
             var overDueTasks = await _taskDatabase.GetOverDueTasks();
-            return overDueTasks; 
-        }        
+            return overDueTasks;
+        }
     }
-
-    
 }

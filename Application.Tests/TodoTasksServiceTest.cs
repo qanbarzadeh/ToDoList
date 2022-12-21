@@ -10,9 +10,9 @@ using Castle.DynamicProxy.Generators;
 
 namespace Application.Tests
 {
-    public class ToDoListServiceTest
+    public class TodoTasksServiceTest
     {
-        TaskDatabase taskDatabase = new TaskDatabase();
+        TodoTaskDatabase taskDatabase = new TodoTaskDatabase();
 
         [Fact]
         public async Task Creates_a_Task()
@@ -24,10 +24,9 @@ namespace Application.Tests
                 DueDate = DateTime.Now.AddDays(1)
             };
 
-
             //action 
-            var todoListService = new ToDoTasksService(taskDatabase);
-            todoListService.CreateTask(createTask);
+            var todoListService = new TodoTasksService(taskDatabase);
+            await todoListService.CreateTask(createTask);
 
 
             //assert 
@@ -57,7 +56,7 @@ namespace Application.Tests
 
             taskDatabase.AddTasks(toDoList);
             //action
-            var toDoListService = new ToDoTasksService(taskDatabase);
+            var toDoListService = new TodoTasksService(taskDatabase);
             var pendingTasks = await toDoListService.GetPendingsTasks();
 
             //assert
@@ -85,7 +84,7 @@ namespace Application.Tests
 
 
             //action
-            var toDoListService = new ToDoTasksService(taskDatabase);
+            var toDoListService = new TodoTasksService(taskDatabase);
             var overDueTasks = await toDoListService.GetOverDueTasks();
 
             //Assert
