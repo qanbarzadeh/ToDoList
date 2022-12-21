@@ -1,10 +1,10 @@
 ﻿using Domain.Todo;
 
-namespace Application.Tests
+namespace Application
 {
-    internal interface ITodoTasksService
+    public interface ITodoTasksService
     {
-        Task<ToDoTask> CreateTask(CreatTask task);
+        Task<ToDoTask> CreateTask(CreatTask task, CancellationToken cancellationToken);
         Task<List<ToDoTask>> GetOverDueTasks();
         Task<List<ToDoTask>> GetPendingsTasks();
     }

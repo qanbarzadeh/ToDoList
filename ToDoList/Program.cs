@@ -3,6 +3,8 @@ using Domain.Todo;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Repositories.ToDoList;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Application;
+using Infrastructure;
 
 namespace ToDoList
 {
@@ -13,6 +15,10 @@ namespace ToDoList
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            builder.Services.AddTodoTaskServices();
+            builder.Services.AddTodoTaskRepositories();
+
             builder.Services.AddAuthorization();
             builder.Services.AddDbContext<TodoDbContext>(opt => opt.UseInMemoryDatabase("ToDoListDb"));
             //builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -39,12 +45,11 @@ namespace ToDoList
 
 
             //Create a Todo Task
-            app.MapPost("/todolist/createTask", async (ToDoTask todoTask, TodoDbContext db) =>
+            app.MapPost("/todolist/createTask", async (ITodoTasksService todoTaskService,CreatTask creatTask, CancellationToken cancellationToken) =>
             {
-                db.ToDoTasks.Add(todoTask);
-                await db.SaveChangesAsync();
+               var task = await todoTaskService.CreateTask(creatTask, cancellationToken);
 
-                return Results.Created($"/todolist/{todoTask.Id}", todoTask);
+                return Results.Created($"/todolist/{task.Id}", task);
             });
 
             ////Get list of Todo Tasks

@@ -21,8 +21,8 @@ namespace Infrastructure
         }
         public async Task AddTask(ToDoTask item)
         {
-           dbContext.Add(item);
-           await dbContext.SaveChangesAsync();
+            dbContext.Add(item);
+            await dbContext.SaveChangesAsync();
         }
 
         public IQueryable<ToDoTask> GetAllTasks()
@@ -35,9 +35,9 @@ namespace Infrastructure
             return await dbContext.ToDoTasks.Where(t => !t.Completed && t.DueDate < DateTime.Now).ToListAsync();
         }
 
-        public Task<List<ToDoTask>> GetPendingTaskList()
+        public async Task<List<ToDoTask>> GetPendingTasks()
         {
-            throw new NotImplementedException();
+            return await dbContext.ToDoTasks.Where(t => !t.Completed && (!t.DueDate.HasValue || t.DueDate > DateTime.Now)).ToListAsync();
         }
 
 

@@ -15,11 +15,11 @@ namespace Application.Tests
         }
         public async Task<List<ToDoTask>> GetPendingsTasks()
         {
-            var pendingTaskList = await _taskDatabase.GetPendingTaskList();
+            var pendingTaskList = await _taskDatabase.GetPendingTasks();
 
             return pendingTaskList;
         }
-        public async Task<ToDoTask> CreateTask(CreatTask task)
+        public async Task<ToDoTask> CreateTask(CreatTask task,CancellationToken cancellationToken)
         {
             ToDoTask toDo = new ToDoTask()
             {

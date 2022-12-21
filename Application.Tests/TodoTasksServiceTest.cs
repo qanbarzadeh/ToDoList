@@ -26,7 +26,8 @@ namespace Application.Tests
 
             //action 
             var todoListService = new TodoTasksService(taskDatabase);
-            await todoListService.CreateTask(createTask);
+            var cancellationToken = new CancellationToken();
+            await todoListService.CreateTask(createTask, cancellationToken);
 
 
             //assert 

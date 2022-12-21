@@ -35,7 +35,7 @@ namespace Application.Tests
             return Task.FromResult(tasks.Where(t => !t.Completed && t.DueDate > DateTime.Now).ToList());
         }
 
-        public Task<List<ToDoTask>> GetPendingTaskList()
+        public Task<List<ToDoTask>> GetPendingTasks()
         {
             throw new NotImplementedException();
         }

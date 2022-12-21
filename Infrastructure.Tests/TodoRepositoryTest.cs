@@ -52,14 +52,7 @@ namespace Infrastructure.Tests
         {
             //arrange
             var now = DateTime.Now;
-
-            var task = new ToDoTask()
-            {
-                Title = "Test",
-                DueDate = now,
-                Completed = false,
-            };
-
+       
             var tasks = new ToDoTask[]
                {
                     new ToDoTask { Title = "Test",Completed = false, DueDate = now.AddMinutes(-5)},
@@ -73,6 +66,39 @@ namespace Infrastructure.Tests
             var overdueTasks = await repository.GetOverDueTasks();
 
             Assert.Collection(overdueTasks, overdueTask => Assert.Equal(tasks[0].Id, overdueTask.Id));
+        }
+
+        [Fact]
+        public async Task GetsPendingTasks()
+        {
+            //arrange
+            var now = DateTime.Now;    
+
+            var tasks = new ToDoTask[]
+               {
+                    new ToDoTask { Title = "Test",Completed = true, DueDate = now.AddMinutes(-5)},
+                    new ToDoTask { Title = "Test2",Completed = false, DueDate = now.AddMinutes(5)},
+                    new ToDoTask { Title = "Test3",Completed = false}
+               };
+            dbContext.ToDoTasks.AddRange(tasks);
+            await dbContext.SaveChangesAsync();
+
+            //action
+            var overdueTasks = await repository.GetPendingTasks();
+
+            Assert.Collection(overdueTasks, 
+                overdueTask2 =>
+                {
+                    Assert.Equal(tasks[1].Id, overdueTask2.Id);
+                    Assert.Equal(tasks[1].DueDate, overdueTask2.DueDate);
+                    Assert.False(overdueTask2.Completed);
+                },
+                overdueTask3 =>
+                {
+                    Assert.Equal(tasks[2].Id, overdueTask3.Id);
+                    Assert.Null(overdueTask3.DueDate);
+                    Assert.False(overdueTask3.Completed);
+                });
         }
     }
 }
