@@ -10,9 +10,9 @@ namespace Domain.Todo
     public class ToDoTask
     {        
         public int Id { get; set; }
-        public string Title { get; set; } = string.Empty;
+        public string Title { get; set; }
         public DateTime? DueDate { get; set; }
-        public bool Completed { get; set; } //should it be here in the Domain ?
-        public string status { get; set; } = string.Empty;
+        public bool Completed { get; set; } = false;
+        //public string status { get; set; } 
     }
 }

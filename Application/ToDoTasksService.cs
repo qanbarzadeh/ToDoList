@@ -1,6 +1,7 @@
 ﻿
 using Domain.Todo;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Application.Tests
 {
@@ -13,31 +14,32 @@ namespace Application.Tests
         {
             this.todoTaskRepository = todoTaskRepository;
         }
+
         public async Task<List<ToDoTask>> GetPendingsTasks()
         {
             var pendingTaskList = await todoTaskRepository.GetPendingTasks();
 
             return pendingTaskList;
         }
-        public async Task<ToDoTask> CreateTask(CreatTask task,CancellationToken cancellationToken)
+
+        public async Task<ToDoTask> CreateTask(CreatTask task, CancellationToken cancellationToken)
         {
             ToDoTask toDo = new ToDoTask()
             {
                 Id = lastId++,
-                Title = "Test",
-                DueDate = DateTime.Now.AddDays(1)
+                Title = task.Title,
+                DueDate = task.DueDate,
+                Completed = false
             };
-            toDo.Title = task.Title;
-            toDo.DueDate = task.DueDate;
 
             await todoTaskRepository.AddTask(toDo);
 
             return toDo;
         }
+
         public async Task<List<ToDoTask>> GetOverDueTasks()
         {
-            var overDueTasks = await todoTaskRepository.GetOverDueTasks();           
-            return overDueTasks;
+            return await todoTaskRepository.GetOverDueTasks();
         }
     }
 }

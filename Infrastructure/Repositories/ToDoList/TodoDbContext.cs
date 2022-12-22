@@ -8,7 +8,7 @@ namespace Infrastructure.Repositories.ToDoList
     {
         public TodoDbContext(DbContextOptions<TodoDbContext> options) : base(options) { }
         public DbSet<ToDoTask> ToDoTasks  => Set<ToDoTask>();
-
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
