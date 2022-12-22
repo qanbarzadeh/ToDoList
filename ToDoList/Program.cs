@@ -45,10 +45,9 @@ namespace ToDoList
 
 
             //Create a Todo Task
-            app.MapPost("/todolist/createTask", async (ITodoTasksService todoTaskService,CreatTask creatTask, CancellationToken cancellationToken) =>
+            app.MapPost("/todoTasks", async (ITodoTasksService todoTaskService,CreatTask creatTask, CancellationToken cancellationToken) =>
             {
                var task = await todoTaskService.CreateTask(creatTask, cancellationToken);
-
                 return Results.Created($"/todolist/{task.Id}", task);
             });
 
@@ -61,8 +60,12 @@ namespace ToDoList
             ////Get list of pending tasks
             //app.MapGet("/todolist/pending", async (ToDoDb db) =>)); 
 
-            ////Get list of overdue tasks
-            //app.MapGet("/todolist/overdue", async (ToDoDb db) =>);
+            //Get list of overdue tasks
+            app.MapGet("/todoTasks/overdues", async (ITodoTasksService todoTaskService, CancellationToken cancellationToken) =>
+            {
+                var overdueTasks = await todoTaskService.GetOverDueTasks();
+                return Results.Ok(overdueTasks);
+            });
 
             //Edit a Task
             //app.MapPut("/todolist/{id}", async (int id, ToDoDb db, ToDoTask target) =>                

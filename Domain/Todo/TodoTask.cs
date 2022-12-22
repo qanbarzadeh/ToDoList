@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Todo
 {
-    public class ToDoTask
+    public class TodoTask
     {        
         public int Id { get; set; }
         public string Title { get; set; }

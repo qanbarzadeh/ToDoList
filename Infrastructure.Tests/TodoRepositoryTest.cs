@@ -28,7 +28,7 @@ namespace Infrastructure.Tests
             var date = DateTime.Now;
 
             //action
-            var task = new ToDoTask()
+            var task = new TodoTask()
             {
                 Title = "Test",
                 DueDate = date,
@@ -53,13 +53,13 @@ namespace Infrastructure.Tests
             //arrange
             var now = DateTime.Now;
        
-            var tasks = new ToDoTask[]
+            var tasks = new TodoTask[]
                {
-                    new ToDoTask { Title = "Test",Completed = false, DueDate = now.AddMinutes(-5)},
-                    new ToDoTask { Title = "Test2",Completed = true, DueDate = now.AddMinutes(-5)},
-                    new ToDoTask { Title = "Test3",Completed = false}
+                    new TodoTask { Title = "Test",Completed = false, DueDate = now.AddMinutes(-5)},
+                    new TodoTask { Title = "Test2",Completed = true, DueDate = now.AddMinutes(-5)},
+                    new TodoTask { Title = "Test3",Completed = false}
                };
-            dbContext.ToDoTasks.AddRange(tasks);
+            dbContext.TodoTasks.AddRange(tasks);
             await dbContext.SaveChangesAsync();
 
             //action
@@ -74,13 +74,13 @@ namespace Infrastructure.Tests
             //arrange
             var now = DateTime.Now;    
 
-            var tasks = new ToDoTask[]
+            var tasks = new TodoTask[]
                {
-                    new ToDoTask { Title = "Test",Completed = true, DueDate = now.AddMinutes(-5)},
-                    new ToDoTask { Title = "Test2",Completed = false, DueDate = now.AddMinutes(5)},
-                    new ToDoTask { Title = "Test3",Completed = false}
+                    new TodoTask { Title = "Test",Completed = true, DueDate = now.AddMinutes(-5)},
+                    new TodoTask { Title = "Test2",Completed = false, DueDate = now.AddMinutes(5)},
+                    new TodoTask { Title = "Test3",Completed = false}
                };
-            dbContext.ToDoTasks.AddRange(tasks);
+            dbContext.TodoTasks.AddRange(tasks);
             await dbContext.SaveChangesAsync();
 
             //action

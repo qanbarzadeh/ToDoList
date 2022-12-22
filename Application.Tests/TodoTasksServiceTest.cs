@@ -19,7 +19,7 @@ namespace Application.Tests
                 DueDate = DateTime.Now.AddDays(1)
             };
 
-            ToDoTask todoTask = new ToDoTask()
+            TodoTask todoTask = new TodoTask()
             {
                 Id = 1,
                 Title = createTask.Title,
@@ -44,10 +44,10 @@ namespace Application.Tests
         public async Task GetsPendingTasks()
         {
             //arrange            
-            var mockedPendingTasks = new List<ToDoTask>()
+            var mockedPendingTasks = new List<TodoTask>()
             {
-                new ToDoTask(){ Id = 2, Title = "T2",Completed = false},
-                new ToDoTask(){ Id = 4, Title = "T4",Completed = false}
+                new TodoTask(){ Id = 2, Title = "T2",Completed = false},
+                new TodoTask(){ Id = 4, Title = "T4",Completed = false}
             };
 
             //var mockedRepository = new Mock<ITodoTaskRepository>();
@@ -71,10 +71,10 @@ namespace Application.Tests
             var now = DateTime.Now;
             
             //arrange
-            var overdueTasks = new List<ToDoTask>()
+            var overdueTasks = new List<TodoTask>()
             {
-                new ToDoTask(){ Id = 2, Title = "T2",Completed = false, DueDate = now.AddDays(-1) },
-                new ToDoTask(){ Id = 4, Title = "T4",Completed = false , DueDate = now.AddSeconds(-1)}                
+                new TodoTask(){ Id = 2, Title = "T2",Completed = false, DueDate = now.AddDays(-1) },
+                new TodoTask(){ Id = 4, Title = "T4",Completed = false , DueDate = now.AddSeconds(-1)}                
             };
             mockedTodoRepository.Setup(m => m.GetOverDueTasks()).Returns(Task.FromResult(overdueTasks));
             

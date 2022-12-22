@@ -20,25 +20,25 @@ namespace Infrastructure
             this.dbContext = dbContext;
         }
     
-        public async  Task AddTask(ToDoTask item)
+        public async  Task AddTask(TodoTask item)
         {
             dbContext.Add(item);
             await dbContext.SaveChangesAsync(); 
         }
 
-        public async Task<List<ToDoTask>> GetOverDueTasks()
+        public async Task<List<TodoTask>> GetOverDueTasks()
         {
-            return await dbContext.ToDoTasks.Where(t => !t.Completed && t.DueDate < DateTime.Now).ToListAsync();
+            return await dbContext.TodoTasks.Where(t => !t.Completed && t.DueDate < DateTime.Now).ToListAsync();
         }
 
-        public async Task<List<ToDoTask>> GetPendingTasks()
+        public async Task<List<TodoTask>> GetPendingTasks()
         {
-            return await dbContext.ToDoTasks.Where(t => !t.Completed && (!t.DueDate.HasValue || t.DueDate > DateTime.Now)).ToListAsync();
+            return await dbContext.TodoTasks.Where(t => !t.Completed && (!t.DueDate.HasValue || t.DueDate > DateTime.Now)).ToListAsync();
         }
 
-        async Task<List<ToDoTask>> ITodoTaskRepository.GetAllTasks()
+        async Task<List<TodoTask>> ITodoTaskRepository.GetAllTasks()
         {
-            return await dbContext.ToDoTasks.ToListAsync(); 
+            return await dbContext.TodoTasks.ToListAsync(); 
         }
     }
 }

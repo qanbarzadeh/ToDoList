@@ -5,10 +5,10 @@ namespace Application
 {
     public interface ITodoTaskRepository
     {
-        Task<List<ToDoTask>> GetOverDueTasks();
-        Task<List<ToDoTask>> GetPendingTasks();
-        Task<List<ToDoTask>> GetAllTasks();
-        Task AddTask(ToDoTask item); 
+        Task<List<TodoTask>> GetOverDueTasks();
+        Task<List<TodoTask>> GetPendingTasks();
+        Task<List<TodoTask>> GetAllTasks();
+        Task AddTask(TodoTask item); 
        
     }
 }
