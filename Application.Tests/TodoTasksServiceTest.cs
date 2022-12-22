@@ -1,11 +1,14 @@
 ﻿using Domain.Todo;
+using Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 
 namespace Application.Tests
 {
     public class TodoTasksServiceTest
     {
-        FakeTodoTaskDatabase taskDatabase = new FakeTodoTaskDatabase();
+        
+        Mock<ITodoTaskRepository> mockedTodoRepository = new Mock<ITodoTaskRepository>();
 
         [Fact]
         public async Task Creates_a_Task()
@@ -16,23 +19,28 @@ namespace Application.Tests
                 Title = "Hit the Gym",
                 DueDate = DateTime.Now.AddDays(1)
             };
-
+            var toDoTask = new ToDoTask()
+            {
+                Title = "Play all the games",
+                DueDate = DateTime.Now.AddDays(3)
+            };
+                  
             //action 
-            var todoListService = new TodoTasksService(taskDatabase);
+            mockedTodoRepository.Setup(m => m.AddTask(createTask)).Returns(Task.CompletedTask);
+            var todoListService = new TodoTasksService(mockedTodoRepository.Object);
             var cancellationToken = new CancellationToken();
             await todoListService.CreateTask(createTask, cancellationToken);
-
+            var taskList =  await mockedTodoRepository.Object.GetAllTasks(); 
 
             //assert 
-            var tasks = await taskDatabase.GetTasks();
-            Assert.NotEmpty(tasks);
-            Assert.Collection(tasks, t =>
+
+            Assert.NotEmpty(taskList);
+            Assert.Collection(taskList, t =>
             {
                 Assert.NotNull(t.Title);
                 Assert.Equal(createTask.Title, t.Title);
                 Assert.NotNull(t.DueDate);
             });
-
         }
 
         [Fact]
@@ -46,11 +54,11 @@ namespace Application.Tests
                 new ToDoTask(){ Id = 4, Title = "T4",Completed = false}
             };
 
-            var mockedRepository = new Mock<ITodoTaskRepository>();
-            mockedRepository.Setup(c => c.GetPendingTasks()).Returns(Task.FromResult(mockedPendingTasks));
+            //var mockedRepository = new Mock<ITodoTaskRepository>();
+            mockedTodoRepository.Setup(c => c.GetPendingTasks()).Returns(Task.FromResult(mockedPendingTasks));
 
             //action
-            var toDoListService = new TodoTasksService(mockedRepository.Object);
+            var toDoListService = new TodoTasksService(mockedTodoRepository.Object);
             var pendingTasks = await toDoListService.GetPendingsTasks();
 
             //assert
@@ -75,11 +83,10 @@ namespace Application.Tests
                 new ToDoTask(){ Id = 4, Title = "T4",Completed = false , DueDate = now.AddSeconds(-1)},
                 new ToDoTask(){ Id = 5, Title = "T5",Completed = false , DueDate = now.AddDays(+2)}
             };
-            taskDatabase.AddTasks(toDoList);
-
+            //taskDatabase.AddTasks(toDoList);
 
             //action
-            var toDoListService = new TodoTasksService(taskDatabase);
+            var toDoListService = new TodoTasksService(mockedTodoRepository.Object);
             var overDueTasks = await toDoListService.GetOverDueTasks();
 
             //Assert
