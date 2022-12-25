@@ -109,9 +109,8 @@ namespace Application.Tests
                 DueDate = DateTime.Now.AddDays(2),
                 Completed = false
             };
-            mockedTodoRepository.Setup(t => t.GetTaskById(It.IsAny<int>())).Returns(Task.FromResult(toDoTask));             
             mockedTodoRepository.Setup(m => m.UpdateTask(It.IsAny<TodoTask>())).Returns(Task.FromResult(updatedTodoTask));
-            CancellationToken token = new CancellationToken();            
+            CancellationToken token = new();            
             
             //Action
             var todoTaskService = new TodoTasksService(mockedTodoRepository.Object);
