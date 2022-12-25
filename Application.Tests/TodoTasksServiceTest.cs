@@ -1,7 +1,9 @@
-﻿using Domain.Todo;
+﻿using Castle.DynamicProxy.Generators;
+using Domain.Todo;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Net.Http.Headers;
 
 namespace Application.Tests
 {
@@ -34,8 +36,7 @@ namespace Application.Tests
             var cancellationToken = new CancellationToken();
             var createdTask = await todoListService.CreateTask(createTask, cancellationToken);
 
-            //assert           
-            Assert.True(createdTask.Id > 0);
+            //assert                       
             Assert.False(createdTask.Completed);
             Assert.Equal(todoTask.Title, createdTask.Title);
             Assert.Equal(todoTask.DueDate, createdTask.DueDate);
@@ -90,6 +91,45 @@ namespace Application.Tests
                 //Assert.True(now > t.DueDate);
                 Assert.False(t.Completed);
             });
+        }
+        [Fact]
+        public async Task Updates_a_Todo_Task()
+        {
+            //Arrange 
+            CreatTask basicTask = new CreatTask()
+            {
+                Title = "Test",
+                DueDate = DateTime.Now.AddDays(1)
+
+            };
+            var toDoTask = new TodoTask()
+            {
+                Id = 1,
+                Title = "Test",
+                DueDate = DateTime.Now.AddDays(1)
+            };
+            var updatedTodoTask = new TodoTask()
+            {
+                Id = 1,
+                Title = "Updated",
+                DueDate = DateTime.Now.AddDays(2),
+                Completed = false
+            };
+            //Action
+            mockedTodoRepository.Setup(t => t.AddTask(toDoTask)).Returns(Task.CompletedTask); 
+            mockedTodoRepository.Setup(m => m.UpdateTask(toDoTask)).Returns(Task.CompletedTask);
+            mockedTodoRepository.Setup(t => t.GetTaskById(toDoTask)).Returns(Task.FromResult(updatedTodoTask)); 
+            var todoTaskService = new TodoTasksService(mockedTodoRepository.Object);
+            CancellationToken token = new CancellationToken();            
+            await todoTaskService.UpdateTask(updatedTodoTask);
+             var updated = await todoTaskService.GetTaskById(toDoTask);
+
+
+            //Assert
+            Assert.True(updated.Id == 1);
+            Assert.True(updated.Completed == false);
+            Assert.Equal(updated.Title, updatedTodoTask.Title);
+            Assert.Equal(updated.DueDate, updatedTodoTask.DueDate); 
         }
        
     }

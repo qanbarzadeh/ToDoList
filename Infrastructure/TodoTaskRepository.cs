@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Sources;
 
 namespace Infrastructure
 {
@@ -36,9 +37,52 @@ namespace Infrastructure
             return await dbContext.TodoTasks.Where(t => !t.Completed && (!t.DueDate.HasValue || t.DueDate > DateTime.Now)).ToListAsync();
         }
 
-        async Task<List<TodoTask>> ITodoTaskRepository.GetAllTasks()
+        public async Task<List<TodoTask>> GetAllTasks()
         {
             return await dbContext.TodoTasks.ToListAsync(); 
+        }
+
+        public Task UpdateTask(TodoTask task) 
+        {
+            try
+            {
+                var todoTask = dbContext.TodoTasks.Find(task.Id);
+                if (todoTask != null)
+                {
+                    todoTask.Title = task.Title;
+                    todoTask.DueDate = task.DueDate;
+                    todoTask.Completed = task.Completed;
+                    dbContext.TodoTasks.Update(todoTask);
+                    dbContext.SaveChanges();
+                    
+                }
+            }
+            catch (InvalidCastException ex)
+            {                
+                throw ex; 
+            }
+
+            return Task.CompletedTask;
+        }   
+
+        public async Task<TodoTask> GetTaskById(TodoTask task)
+        {
+            try
+            {
+                if (task is not null)
+                {
+                    var todoTask = await dbContext.TodoTasks.FindAsync(task.Id);
+                    return todoTask; 
+                }else
+                {
+                    return new TodoTask(); 
+                }
+                
+            }catch (InvalidCastException ex)
+            {
+                throw ex;
+            }
+            
         }
     }
 }

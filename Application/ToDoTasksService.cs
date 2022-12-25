@@ -37,5 +37,29 @@ namespace Application.Tests
         {
             return await todoTaskRepository.GetOverDueTasks();
         }
+     
+        public  async Task<TodoTask> GetTaskById(TodoTask task)
+        {
+            try
+            {
+                if (task is not null)
+                {
+                    return await todoTaskRepository.GetTaskById(task);
+                }
+                else
+                {
+                    return new TodoTask();
+                }
+            }catch(Exception ex)
+            {
+                throw; 
+            }
+        }
+
+        public  Task UpdateTask(TodoTask task)
+        {            
+           todoTaskRepository.UpdateTask(task);
+           return Task.CompletedTask; 
+        }
     }
 }

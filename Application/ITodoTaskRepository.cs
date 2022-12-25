@@ -8,7 +8,8 @@ namespace Application
         Task<List<TodoTask>> GetOverDueTasks();
         Task<List<TodoTask>> GetPendingTasks();
         Task<List<TodoTask>> GetAllTasks();
-        Task AddTask(TodoTask item); 
-       
+        Task AddTask(TodoTask item);
+        Task UpdateTask(TodoTask task);
+        Task<TodoTask> GetTaskById(TodoTask task);
     }
 }
