@@ -36,30 +36,20 @@ namespace Application.Tests
         public async Task<List<TodoTask>> GetOverDueTasks()
         {
             return await todoTaskRepository.GetOverDueTasks();
-        }
-     
-        public  async Task<TodoTask> GetTaskById(TodoTask task)
-        {
-            try
-            {
-                if (task is not null)
-                {
-                    return await todoTaskRepository.GetTaskById(task);
-                }
-                else
-                {
-                    return new TodoTask();
-                }
-            }catch(Exception ex)
-            {
-                throw; 
-            }
+        }    
+        
+        public async Task<TodoTask> UpdateTask(TodoTask updatingTask)
+        {            
+           var task = await todoTaskRepository.GetTaskById(updatingTask.Id);              
+            if (task is null)
+                throw Errors.NotFound(updatingTask.Id);
+
+           return await todoTaskRepository.UpdateTask(updatingTask);           
         }
 
-        public  Task UpdateTask(TodoTask task)
-        {            
-           todoTaskRepository.UpdateTask(task);
-           return Task.CompletedTask; 
+        public async Task<TodoTask> GetTaskByID(int id)
+        {
+            return await todoTaskRepository.GetTaskById(id);
         }
     }
 }

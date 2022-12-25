@@ -95,13 +95,7 @@ namespace Application.Tests
         [Fact]
         public async Task Updates_a_Todo_Task()
         {
-            //Arrange 
-            CreatTask basicTask = new CreatTask()
-            {
-                Title = "Test",
-                DueDate = DateTime.Now.AddDays(1)
-
-            };
+            //Arrange            
             var toDoTask = new TodoTask()
             {
                 Id = 1,
@@ -115,15 +109,13 @@ namespace Application.Tests
                 DueDate = DateTime.Now.AddDays(2),
                 Completed = false
             };
-            //Action
-            mockedTodoRepository.Setup(t => t.AddTask(toDoTask)).Returns(Task.CompletedTask); 
-            mockedTodoRepository.Setup(m => m.UpdateTask(toDoTask)).Returns(Task.CompletedTask);
-            mockedTodoRepository.Setup(t => t.GetTaskById(toDoTask)).Returns(Task.FromResult(updatedTodoTask)); 
-            var todoTaskService = new TodoTasksService(mockedTodoRepository.Object);
+            mockedTodoRepository.Setup(t => t.GetTaskById(It.IsAny<int>())).Returns(Task.FromResult(toDoTask));             
+            mockedTodoRepository.Setup(m => m.UpdateTask(It.IsAny<TodoTask>())).Returns(Task.FromResult(updatedTodoTask));
             CancellationToken token = new CancellationToken();            
-            await todoTaskService.UpdateTask(updatedTodoTask);
-             var updated = await todoTaskService.GetTaskById(toDoTask);
-
+            
+            //Action
+            var todoTaskService = new TodoTasksService(mockedTodoRepository.Object);
+            var updated = await todoTaskService.UpdateTask(updatedTodoTask); 
 
             //Assert
             Assert.True(updated.Id == 1);

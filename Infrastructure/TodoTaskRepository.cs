@@ -42,47 +42,37 @@ namespace Infrastructure
             return await dbContext.TodoTasks.ToListAsync(); 
         }
 
-        public Task UpdateTask(TodoTask task) 
-        {
-            try
-            {
-                var todoTask = dbContext.TodoTasks.Find(task.Id);
-                if (todoTask != null)
-                {
-                    todoTask.Title = task.Title;
-                    todoTask.DueDate = task.DueDate;
-                    todoTask.Completed = task.Completed;
-                    dbContext.TodoTasks.Update(todoTask);
-                    dbContext.SaveChanges();
-                    
-                }
-            }
-            catch (InvalidCastException ex)
-            {                
-                throw ex; 
-            }
+        public async Task<TodoTask> UpdateTask(TodoTask task)
+        {                                
+            dbContext.TodoTasks.Update(task);
 
-            return Task.CompletedTask;
+            await dbContext.SaveChangesAsync();
+            return task;   
         }   
 
-        public async Task<TodoTask> GetTaskById(TodoTask task)
-        {
-            try
-            {
-                if (task is not null)
-                {
-                    var todoTask = await dbContext.TodoTasks.FindAsync(task.Id);
-                    return todoTask; 
-                }else
-                {
-                    return new TodoTask(); 
-                }
+        //public async Task<TodoTask> GetTaskById(TodoTask task)
+        //{
+        //    try
+        //    {
+        //        if (task is not null)
+        //        {
+        //            var todoTask = await dbContext.TodoTasks.FindAsync(task.Id);
+        //            return todoTask; 
+        //        }else
+        //        {
+        //            return new TodoTask(); 
+        //        }
                 
-            }catch (InvalidCastException ex)
-            {
-                throw ex;
-            }
+        //    }catch (InvalidCastException ex)
+        //    {
+        //        throw ex;
+        //    }
             
+        //}
+
+        public async Task<TodoTask> GetTaskById(int id)
+        {            
+            return await dbContext.TodoTasks.FindAsync(id);                     
         }
     }
 }

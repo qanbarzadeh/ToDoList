@@ -9,7 +9,8 @@ namespace Application
         Task<List<TodoTask>> GetPendingTasks();
         Task<List<TodoTask>> GetAllTasks();
         Task AddTask(TodoTask item);
-        Task UpdateTask(TodoTask task);
-        Task<TodoTask> GetTaskById(TodoTask task);
+        Task<TodoTask> UpdateTask(TodoTask task);
+        //Task<TodoTask> GetTaskById(TodoTask task);
+        Task<TodoTask> GetTaskById(int id);  
     }
 }
