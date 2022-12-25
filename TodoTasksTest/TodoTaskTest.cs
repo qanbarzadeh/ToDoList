@@ -82,7 +82,7 @@ namespace TodoTasksTest
             dbContext.TodoTasks.AddRange(tasks);
             await dbContext.SaveChangesAsync();
 
-            var response = await client.GetAsync("/todoTasks/overdues");
+            var response = await client.GetAsync("/todoTasks/overdue");
             var responseContent = await response.Content.ReadAsStringAsync();
 
             Assert.True(response.IsSuccessStatusCode);
@@ -95,6 +95,39 @@ namespace TodoTasksTest
                 });
         }
 
+        [Fact]
+        public async Task UpdatesTodoTask()
+        {
+            var now = DateTime.Now;
+            var task =
+                new TodoTask()
+                {
+                    Title = "Test not overdue",
+                    DueDate = now.AddDays(1)
+                };
+            
+            dbContext.TodoTasks.Add(task);
+            await dbContext.SaveChangesAsync();
+
+            //Act
+            var updatingTask = new TodoTask()
+            {
+                Id = task.Id,
+                Completed = true,
+                Title = "updated title"
+            };
+            var requestContent = new StringContent(JsonSerializer.Serialize(updatingTask), Encoding.UTF8, "application/json");
+            var response = await client.PutAsync("/todoTasks", requestContent);
+            var updateResponseContent = await response.Content.ReadAsStringAsync();
+
+            Assert.True(response.IsSuccessStatusCode);
+            var updatedTask = JsonSerializer.Deserialize<TodoTask>(updateResponseContent, options);
+            Assert.NotNull(updatedTask);
+            Assert.Equal(task.Id, updatingTask.Id);
+            Assert.Equal(updatingTask.Title, updatedTask.Title);
+            Assert.Equal(updatingTask.DueDate, updatedTask.DueDate);
+
+        }
         public void Dispose()
         {
             database.EnsureDeleted();

@@ -39,11 +39,7 @@ namespace Application.Tests
         }    
         
         public async Task<TodoTask> UpdateTask(TodoTask updatingTask)
-        {            
-           var task = await todoTaskRepository.GetTaskById(updatingTask.Id);              
-            if (task is null)
-                throw Errors.NotFound(updatingTask.Id);
-
+        {                     
            return await todoTaskRepository.UpdateTask(updatingTask);           
         }
 

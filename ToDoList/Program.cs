@@ -73,12 +73,12 @@ namespace ToDoList
                 return Results.Ok(overdueTasks);
             });
 
-            //app.MapPut("/todoTasks", async (ITodoTasksService todoTaskService, TodoTask task,  CancellationToken token) =>
-            //{
-            //    var updatedTask = await todoTaskService.UpdateTask(task);
-            //    return Results.Ok(updatedTask);
-            //}); 
-               
+            app.MapPut("/todoTasks", async (ITodoTasksService todoTaskService, TodoTask task, CancellationToken token) =>
+            {
+                var updatedTask = await todoTaskService.UpdateTask(task);
+                return Results.Ok(updatedTask);
+            });
+
             //Edit a Task
             //app.MapPut("/todolist/{id}", async (int id, ToDoDb db, ToDoTask target) =>
             //{
@@ -91,7 +91,7 @@ namespace ToDoList
             //    await db.SaveChangesAsync();
             //    return Results.NoContent();
             //});
-            //app.Run();
+            app.Run();
         }
     }
  }

@@ -42,9 +42,16 @@ namespace Infrastructure
             return await dbContext.TodoTasks.ToListAsync(); 
         }
 
-        public async Task<TodoTask> UpdateTask(TodoTask task)
+        public async Task<TodoTask> UpdateTask(TodoTask updatingTask)
         {                                
-            dbContext.TodoTasks.Update(task);
+            var task = await dbContext.TodoTasks.FindAsync(updatingTask.Id);
+
+            if (task is null)
+                throw RepositoryErrors.NotFound(updatingTask.Id);
+
+            task.Title = updatingTask.Title;
+            task.Completed = updatingTask.Completed;
+            task.DueDate = updatingTask.DueDate;
 
             await dbContext.SaveChangesAsync();
             return task;   

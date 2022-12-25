@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Tests", "Inf
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{86C5418F-B191-441B-90BE-7C552251DDA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTasksTest", "TodoTasksTest\TodoTasksTest.csproj", "{5B88860F-04A6-40A1-8B38-7DBB707525A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoTasks.Integration.Test", "TodoTasksTest\TodoTasks.Integration.Test.csproj", "{5B88860F-04A6-40A1-8B38-7DBB707525A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
