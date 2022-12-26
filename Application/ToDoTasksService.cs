@@ -1,5 +1,6 @@
 ﻿
 using Domain.Todo;
+using Microsoft.VisualBasic;
 
 namespace Application.Tests
 {
@@ -21,12 +22,19 @@ namespace Application.Tests
 
         public async Task<TodoTask> CreateTask(CreatTask task, CancellationToken cancellationToken)
         {
+            var duedate = task.DueDate.HasValue ? task.DueDate : null;          
+            if (duedate.HasValue && duedate.Value.Date < DateTime.Now.Date)
+            {
+                throw new TodoTaskException("Due date cannot be smaller than today's date");
+            }
+
             TodoTask toDo = new TodoTask()
             {
                 Title = task.Title,
-                DueDate = task.DueDate,
+                DueDate = duedate,
                 Completed = false
             };
+            
 
             await todoTaskRepository.AddTask(toDo);
 
