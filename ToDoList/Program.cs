@@ -47,8 +47,7 @@ namespace ToDoList
                 return Results.Created($"/todolist/{task.Id}", task);
             });
 
-            ////Get list of pending tasks
-            //app.MapGet("/todolist/pending", async (ToDoDb db) =>)); 
+            ////Get list of pending tasks        
             app.MapGet("/pendingTasks", async (ITodoTasksService todoTaskService, CancellationToken token) =>
             {
                 
@@ -77,20 +76,7 @@ namespace ToDoList
             {
                 var updatedTask = await todoTaskService.UpdateTask(task);
                 return Results.Ok(updatedTask);
-            });
-
-            //Edit a Task
-            //app.MapPut("/todolist/{id}", async (int id, ToDoDb db, ToDoTask target) =>
-            //{
-            //    var todo = await db.ToDoTasks.FindAsync(id);
-            //    if (todo == null) return Results.NotFound();
-
-            //    todo.Title = target.Title;
-            //    todo.DueDate = target.DueDate;
-            //    todo.IsTaskComplete = target.IsTaskComplete;
-            //    await db.SaveChangesAsync();
-            //    return Results.NoContent();
-            //});
+            });          
             app.Run();
         }
     }
