@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 
 namespace Application.Tests
 {
@@ -70,15 +71,15 @@ namespace Application.Tests
         {
 
             var now = DateTime.Now;
-            
+
             //arrange
             var overdueTasks = new List<TodoTask>()
             {
                 new TodoTask(){ Id = 2, Title = "T2",Completed = false, DueDate = now.AddDays(-1) },
-                new TodoTask(){ Id = 4, Title = "T4",Completed = false , DueDate = now.AddSeconds(-1)}                
+                new TodoTask(){ Id = 4, Title = "T4",Completed = false , DueDate = now.AddSeconds(-1)}
             };
             mockedTodoRepository.Setup(m => m.GetOverDueTasks()).Returns(Task.FromResult(overdueTasks));
-            
+
             var toDoListService = new TodoTasksService(mockedTodoRepository.Object);
 
             //act
@@ -110,19 +111,41 @@ namespace Application.Tests
                 Completed = false
             };
             mockedTodoRepository.Setup(m => m.UpdateTask(It.IsAny<TodoTask>())).Returns(Task.FromResult(updatedTodoTask));
-            CancellationToken token = new();            
-            
+            CancellationToken token = new();
+
             //Action
             var todoTaskService = new TodoTasksService(mockedTodoRepository.Object);
-            var updated = await todoTaskService.UpdateTask(updatedTodoTask); 
+            var updated = await todoTaskService.UpdateTask(updatedTodoTask);
 
             //Assert
             Assert.True(updated.Id == 1);
             Assert.True(updated.Completed == false);
             Assert.Equal(updated.Title, updatedTodoTask.Title);
-            Assert.Equal(updated.DueDate, updatedTodoTask.DueDate); 
+            Assert.Equal(updated.DueDate, updatedTodoTask.DueDate);
         }
-       
+
+        /// <summary>
+        /// throws exception if duedate is less that today date 
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public Task Duedate_should_not_less_than_Today_date()
+        {
+            //arrange
+            var basicTask = new CreatTask()
+            {
+                Title = "Test",
+                DueDate = DateTime.Now.AddDays(-1)
+            };
+            //Action
+            var todoTaskService = new TodoTasksService(mockedTodoRepository.Object);
+            var cancellationToken = new CancellationToken();
+            //Assert
+            Assert.ThrowsAsync<ArgumentException>(() => todoTaskService.CreateTask(basicTask, cancellationToken));
+            return Task.CompletedTask;
+        }
+
     }
+
 
 }
