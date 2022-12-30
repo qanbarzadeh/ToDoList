@@ -4,18 +4,29 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Todo
 {
-    public class TodoTask
+    public class TodoTask : IValidatableObject
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [MaxLength(256)]
+        
+        [Required(ErrorMessage = "Title is required")]
+        [StringLength(256, ErrorMessage = "Title must be no more than 256 characters")]
         public string Title { get; set; }
-        public DateTime? DueDate { get; set; } = DateTime.MinValue; 
-        public bool Completed { get; set; } = false;
-       
-    }
+        public bool Completed { get; set; }        
+        public DateTime? DueDate { get; set; }
+        
 
-
-
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (string.IsNullOrEmpty(Title))
+            {
+                yield return new ValidationResult("Title is required", new[] { nameof(Title) });
+            }
+            if (DueDate < DateTime.Now)
+            {
+                yield return new ValidationResult("Due date must be in the future", new[] { nameof(DueDate) });
+            }
+        }
+    }       
 }
