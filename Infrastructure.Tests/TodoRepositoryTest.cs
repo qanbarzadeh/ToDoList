@@ -56,7 +56,7 @@ namespace Infrastructure.Tests
             var tasks = new TodoTask[]
                {
                     new TodoTask { Title = "Test",Completed = false, DueDate = now.AddMinutes(-5)},
-                    new TodoTask { Title = "Test2",Completed = true, DueDate = now.AddMinutes(-5)},
+                    new TodoTask { Title = "Test2",Completed = false, DueDate = now.AddMinutes(-15)},
                     new TodoTask { Title = "Test3",Completed = false}
                };
             dbContext.TodoTasks.AddRange(tasks);

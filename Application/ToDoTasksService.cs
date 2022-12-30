@@ -1,12 +1,15 @@
 ﻿
 using Domain.Todo;
 using Microsoft.VisualBasic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.Tests
 {
     public class TodoTasksService : ITodoTasksService
     {
         ITodoTaskRepository todoTaskRepository;
+        //inject validator 
+        
         public TodoTasksService(
             ITodoTaskRepository todoTaskRepository)
         {
@@ -28,6 +31,11 @@ namespace Application.Tests
                 throw new TodoTaskException("Due date cannot be smaller than today's date");
             }
 
+            //validation  of task 
+            
+
+          
+            
             TodoTask toDo = new TodoTask()
             {
                 Title = task.Title,

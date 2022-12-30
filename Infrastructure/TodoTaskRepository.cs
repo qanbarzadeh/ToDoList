@@ -20,11 +20,11 @@ namespace Infrastructure
         {
             this.dbContext = dbContext;
         }
-    
-        public async  Task AddTask(TodoTask item)
+
+        public async Task AddTask(TodoTask item)
         {
             dbContext.Add(item);
-            await dbContext.SaveChangesAsync(); 
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task<List<TodoTask>> GetOverDueTasks()
@@ -33,17 +33,17 @@ namespace Infrastructure
         }
 
         public async Task<List<TodoTask>> GetPendingTasks()
-        {
-            return await dbContext.TodoTasks.Where(t => !t.Completed && (!t.DueDate.HasValue || t.DueDate > DateTime.Now)).ToListAsync();
+        {            
+            return await dbContext.TodoTasks.Where(t => (t.DueDate > DateTime.Now || t.DueDate == null) && !t.Completed).ToListAsync();                        
         }
 
         public async Task<List<TodoTask>> GetAllTasks()
         {
-            return await dbContext.TodoTasks.ToListAsync(); 
+            return await dbContext.TodoTasks.ToListAsync();
         }
 
         public async Task<TodoTask> UpdateTask(TodoTask updatingTask)
-        {                                
+        {
             var task = await dbContext.TodoTasks.FindAsync(updatingTask.Id);
 
             if (task is null)
@@ -54,32 +54,11 @@ namespace Infrastructure
             task.DueDate = updatingTask.DueDate;
 
             await dbContext.SaveChangesAsync();
-            return task;   
-        }   
-
-        //public async Task<TodoTask> GetTaskById(TodoTask task)
-        //{
-        //    try
-        //    {
-        //        if (task is not null)
-        //        {
-        //            var todoTask = await dbContext.TodoTasks.FindAsync(task.Id);
-        //            return todoTask; 
-        //        }else
-        //        {
-        //            return new TodoTask(); 
-        //        }
-                
-        //    }catch (InvalidCastException ex)
-        //    {
-        //        throw ex;
-        //    }
-            
-        //}
-
+            return task;
+        }      
         public async Task<TodoTask> GetTaskById(int id)
-        {            
-            return await dbContext.TodoTasks.FindAsync(id);                     
+        {
+            return await dbContext.TodoTasks.FindAsync(id);
         }
     }
 }
