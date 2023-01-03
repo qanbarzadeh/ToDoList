@@ -16,7 +16,7 @@ namespace Application.Tests
         public async Task Creates_a_Task()
         {
             //arrange              
-            var createTask = new CreatTask()
+            var createTask = new BasicTask()
             {
                 Title = "Hit the Gym",
                 DueDate = DateTime.Now.AddDays(1)
@@ -132,7 +132,7 @@ namespace Application.Tests
         public Task Duedate_should_not_less_than_Today_date()
         {
             //arrange
-            var basicTask = new CreatTask()
+            var basicTask = new BasicTask()
             {
                 Title = "Test",
                 DueDate = DateTime.Now.AddDays(-1)

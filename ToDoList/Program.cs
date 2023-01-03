@@ -41,7 +41,7 @@ namespace ToDoList
             app.UseAuthorization();
           
             //Create a Todo Task
-            app.MapPost("/todoTasks", async (ITodoTasksService todoTaskService,CreatTask creatTask, CancellationToken cancellationToken) =>
+            app.MapPost("/todoTasks", async (ITodoTasksService todoTaskService,BasicTask creatTask, CancellationToken cancellationToken) =>
             {
                var task = await todoTaskService.CreateTask(creatTask, cancellationToken);
                 return Results.Created($"/todolist/{task.Id}", task);

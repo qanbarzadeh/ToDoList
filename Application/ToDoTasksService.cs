@@ -23,7 +23,7 @@ namespace Application.Tests
             return pendingTaskList;
         }
 
-        public async Task<TodoTask> CreateTask(CreatTask task, CancellationToken cancellationToken)
+        public async Task<TodoTask> CreateTask(BasicTask task, CancellationToken cancellationToken)
         {
             var duedate = task.DueDate.HasValue ? task.DueDate : null;          
             if (duedate.HasValue && duedate.Value.Date < DateTime.Now.Date)

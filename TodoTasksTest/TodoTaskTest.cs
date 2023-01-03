@@ -40,7 +40,7 @@ namespace TodoTasksTest
         public async Task CreatesTodoTask()
         {
             var now = DateTime.UtcNow;
-            var createTask = new CreatTask()
+            var createTask = new BasicTask()
             {
                 Title = "Test",
                 DueDate = now,
