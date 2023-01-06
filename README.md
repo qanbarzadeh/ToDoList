@@ -21,7 +21,7 @@ This project is the backend for a simple to-do list management system. It is imp
 ## Pull and Run the Docker Image
 
 ```bash
-docker pull quantdevxx/todolist
+docker pull quantdevxx/todolist:Prod
 docker run -p 8080:80 -d quantdevxx/todolist 
 ```
 The `docker pull` command will pull the image from Docker Hub,\n and the `docker run` command will run the image on port 8080 on your local machine.
