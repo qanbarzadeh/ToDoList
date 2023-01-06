@@ -1,14 +1,1 @@
-{
-  "profiles": {
-    "Docker Compose": {
-      "commandName": "Executable",
-      "commandVersion": "1.0",
-      "composeLaunchAction": "LaunchBrowser",
-      "composeLaunchServiceName": "todolist",
-      "composeLaunchUrl": "{Scheme}://{ServiceIPAddress}{ServicePort}/swagger",
-      "serviceActions": {
-        "todolist": "StartDebugging"
-      }
-    }
-  }
-}
+{}
