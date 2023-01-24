@@ -1,25 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Todo;
+﻿using Domain.Todo;
 using MediatR; // MediatR
 namespace Application.Handlers
 {
-    public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, BasicTask>
+    public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, TodoTask>
     {
-        private readonly ITodoTasksService _todoTaskService; 
+        private readonly ITodoTasksService _todoTaskService;
 
         public CreateTaskCommandHandler(ITodoTasksService todoTasksService)
         {
-            _todoTaskService = todoTasksService; 
+            _todoTaskService = todoTasksService;
         }
-        public Task<TodoTask> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
+        public async Task<TodoTask> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
         {
-            _todoTaskService.CreateTask(request, cancellationToken); 
+            var newTask = new BasicTask
+            {
+                Title = "New Task by MediatR!",
+                DueDate = DateTime.Now.AddDays(1)
+            };
 
-            
+            return await _todoTaskService.CreateTask(newTask,cancellationToken);  
         }
     }
 }
+
