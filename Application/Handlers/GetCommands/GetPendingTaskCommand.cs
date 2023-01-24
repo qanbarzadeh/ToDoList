@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Todo;
-using MediatR; 
+using MediatR;
 
-namespace Application.Handlers
+namespace Application.Handlers.GetTasks
 {
     internal class GetPendingTaskCommand : IRequest<List<TodoTask>>
-    {        
-        
+    {
+
     }
 }
