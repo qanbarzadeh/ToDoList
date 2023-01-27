@@ -1,8 +1,8 @@
 ﻿using MediatR; // MediatR
 using Domain.Todo;
 
-namespace Application.Handlers
-    
+namespace Application.Handlers.CreateCommands
+
 {
     public class CreateTaskCommand : IRequest<TodoTask>
     {
@@ -10,15 +10,15 @@ namespace Application.Handlers
         public string Title { get; set; }
         //public string Completed { get; set; }
         //public string Description { get; set; }
-        public string DueDate { get; set; }
-        
-        public CreateTaskCommand(string title, string dueDate)
+        public DateTime DueDate { get; set; }
+
+        public CreateTaskCommand(string title, DateTime dueDate)
         {
             //this.id = id;
-            this.Title = title;
+            Title = title;
             //this.Completed = completed;
             //this.Description = description;
-            this.DueDate = dueDate;
+            DueDate = dueDate;
         }
     }
 }

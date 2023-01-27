@@ -1,16 +1,39 @@
-﻿using Castle.DynamicProxy.Generators;
-using Domain.Todo;
-using Infrastructure;
-using Microsoft.EntityFrameworkCore;
+﻿using Domain.Todo;
 using Moq;
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices;
+using Application.Handlers.CreateCommands;
+using MediatR;
 
 namespace Application.Tests
 {
     public class TodoTasksServiceTest
     {
         Mock<ITodoTaskRepository> mockedTodoRepository = new Mock<ITodoTaskRepository>();
+        Mock<ITodoTasksService> mockedTodoService = new Mock<ITodoTasksService>();
+        //Mock<IMediator> mockedMediatR = new Mock<IMediator>(); 
+
+        [Fact]
+        public async Task Handle_creates_a_task()
+        {
+            //Arrange
+            
+            var createTaskCommand = new CreateTaskCommand("new task by MeditR", DateTime.Now.AddDays(1));            
+            var mockMediator = new Mock<IMediator>();            
+                        
+            mockedTodoRepository.Setup(x => x.AddTask(It.IsAny<TodoTask>())).Returns(Task.FromResult(new TodoTask()));
+            var handler = new CreateTaskCommandHandler(mockedTodoService.Object);
+
+            //Act 
+            var result = await handler.Handle(createTaskCommand, CancellationToken.None);
+
+            //Assert
+            mockedTodoService.Verify(x => x.CreateTask(It.IsAny<BasicTask>(), CancellationToken.None)); 
+            Assert.NotNull(result);
+            Assert.Equal(createTaskCommand.Title, result.Title);
+            Assert.Equal(createTaskCommand.DueDate, result.DueDate);
+        }
+
+
+
 
         [Fact]
         public async Task Creates_a_Task()

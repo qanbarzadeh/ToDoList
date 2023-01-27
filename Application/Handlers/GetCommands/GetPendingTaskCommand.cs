@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Application.Handlers.GetTasks
 {
-    internal class GetPendingTaskCommand : IRequest<List<TodoTask>>
+    public class GetPendingTaskCommand : IRequest<List<TodoTask>>
     {
 
     }

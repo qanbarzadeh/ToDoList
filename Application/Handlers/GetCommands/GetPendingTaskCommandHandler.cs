@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Application.Handlers.GetTasks
 {
-    internal class GetPendingTaskCommandHandler : IRequestHandler<GetPendingTaskCommand, List<TodoTask>>
+    public class GetPendingTaskCommandHandler : IRequestHandler<GetPendingTaskCommand, List<TodoTask>>
     {
         ITodoTaskRepository _todoTaskRepository;
         public GetPendingTaskCommandHandler(ITodoTaskRepository todoTaskRepository)

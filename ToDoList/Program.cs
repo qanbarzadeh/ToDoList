@@ -7,6 +7,8 @@ using Application;
 using Infrastructure;
 using System.Text.Json;
 using System.Net;
+using MediatR; // MediatR
+using Application.Handlers.GetTasks;
 
 namespace ToDoList
 {
@@ -16,8 +18,8 @@ namespace ToDoList
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
+            // Add services to the container            
+            
             builder.Services.AddTodoTaskServices();
             builder.Services.AddTodoTaskRepositories();
 

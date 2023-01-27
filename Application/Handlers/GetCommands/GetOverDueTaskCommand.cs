@@ -9,7 +9,6 @@ using MediatR;
 
 namespace Application.Handlers.GetTasks
 {
-    internal class GetOverDueTaskCommand : IRequest<List<TodoTask>>
-    {
-    }
+    public class GetOverDueTaskCommand : IRequest<List<TodoTask>> { }
+    
 }

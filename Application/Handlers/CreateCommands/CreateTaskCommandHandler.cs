@@ -1,6 +1,7 @@
 ﻿using Domain.Todo;
 using MediatR; // MediatR
-namespace Application.Handlers
+
+namespace Application.Handlers.CreateCommands
 {
     public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, TodoTask>
     {
@@ -14,11 +15,12 @@ namespace Application.Handlers
         {
             var newTask = new BasicTask
             {
-                Title = "New Task by MediatR!",
-                DueDate = DateTime.Now.AddDays(1)
+                Title = request.Title,
+                DueDate = request.DueDate
+
             };
 
-            return await _todoTaskService.CreateTask(newTask,cancellationToken);  
+            return await _todoTaskService.CreateTask(newTask, cancellationToken);
         }
     }
 }
