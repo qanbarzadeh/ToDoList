@@ -32,17 +32,13 @@ namespace Application.Tests
             }
 
             //validation  of task 
-            
-
-          
-            
+                                  
             TodoTask toDo = new TodoTask()
             {
                 Title = task.Title,
                 DueDate = duedate,
                 Completed = false
-            };
-            
+            };            
 
             await todoTaskRepository.AddTask(toDo);
 

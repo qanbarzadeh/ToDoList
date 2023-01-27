@@ -1,22 +1,100 @@
-﻿using Castle.DynamicProxy.Generators;
-using Domain.Todo;
-using Infrastructure;
-using Microsoft.EntityFrameworkCore;
+﻿using Domain.Todo;
 using Moq;
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices;
+using Application.Handlers.CreateCommands;
+using MediatR;
+using Microsoft.VisualBasic;
 
 namespace Application.Tests
 {
     public class TodoTasksServiceTest
     {
         Mock<ITodoTaskRepository> mockedTodoRepository = new Mock<ITodoTaskRepository>();
+        Mock<ITodoTasksService> mockedTodoService = new Mock<ITodoTasksService>();
+        //Mock<IMediator> mockedMediatR = new Mock<IMediator>(); 
+
+
+        [Fact]
+        public async Task CreateTaskCommand_ShouldCreateNewTask()
+        {
+
+            //Arrange
+            var title = "Test meidiatR task";
+            var dueDate = DateTime.Now.AddDays(1);
+            var request = new CreateTaskCommand(title, dueDate); 
+            var basicTask = new BasicTask
+            {
+                Title = title,
+                DueDate = dueDate
+            };
+
+            var todoTask = new TodoTask
+            {
+                Id = 1,
+                Title = basicTask.Title,
+                DueDate = basicTask.DueDate,
+                Completed = false
+            };
+
+            mockedTodoService.Setup(x => x.CreateTask(It.IsAny<BasicTask>(), It.IsAny<CancellationToken>())).ReturnsAsync(todoTask);
+            var handler = new CreateTaskCommandHandler(mockedTodoService.Object);
+            var CancellationToken =  new CancellationToken();
+
+            //Act
+            var result = await handler.Handle(request,CancellationToken); 
+           
+            // Assert
+            mockedTodoService.Verify(x => x.CreateTask(It.IsAny<BasicTask>(), CancellationToken.None));
+            Assert.NotNull(result);
+            Assert.Equal(basicTask.Title, result.Title);
+            Assert.Equal(basicTask.DueDate, result.DueDate);
+        }
+
+        //[Fact]
+        //public async Task Handle_creates_a_task()
+        //{
+        //    //Arrange
+        //    var basicTask = new BasicTask
+        //    {
+        //        Title = "MediarR new basicTask",
+        //        DueDate = DateTime.Now.AddDays(1)
+        //    };
+        //    var todoTask = new TodoTask
+        //    {
+        //        Id = 1,
+        //        Title = basicTask.Title,
+        //        DueDate = basicTask.DueDate,
+        //        Completed = false
+
+        //    };
+            
+        //    var mockMediator = new Mock<IMediator>();
+        //    var createTaskCommand = new CreateTaskCommand("new task by MeditR", DateTime.Now.AddDays(1));            
+            
+        //    mockedTodoService.Setup(x => x.CreateTask( It.IsAny<BasicTask>(),CancellationToken.None)).Returns(Task.FromResult(new TodoTask())); 
+            
+        //    mockedTodoRepository.Setup(x => x.AddTask(It.IsAny<TodoTask>())).Returns(Task.FromResult(new TodoTask()));
+            
+            
+        //    var handler = new CreateTaskCommandHandler(mockedTodoService.Object);
+        //    var token = new CancellationToken(); 
+        //    //Act 
+        //    var result = await handler.Handle(createTaskCommand, token);
+
+        //    //Assert
+        //    mockedTodoService.Verify(x => x.CreateTask(It.IsAny<BasicTask>(), CancellationToken.None)); 
+        //    Assert.NotNull(result);
+        //    Assert.Equal(createTaskCommand.Title, result.Title);
+        //    Assert.Equal(createTaskCommand.DueDate, result.DueDate);
+        //}
+
+
+
 
         [Fact]
         public async Task Creates_a_Task()
         {
             //arrange              
-            var createTask = new BasicTask()
+            var basicTask = new BasicTask()
             {
                 Title = "Hit the Gym",
                 DueDate = DateTime.Now.AddDays(1)
@@ -25,9 +103,9 @@ namespace Application.Tests
             TodoTask todoTask = new TodoTask()
             {
                 Id = 1,
-                Title = createTask.Title,
+                Title = basicTask.Title,
                 Completed = false,
-                DueDate = createTask.DueDate
+                DueDate = basicTask.DueDate
             };
             mockedTodoRepository.Setup(m => m.AddTask(todoTask)).Returns(Task.CompletedTask);
 
@@ -35,7 +113,7 @@ namespace Application.Tests
 
             var todoListService = new TodoTasksService(mockedTodoRepository.Object);
             var cancellationToken = new CancellationToken();
-            var createdTask = await todoListService.CreateTask(createTask, cancellationToken);
+            var createdTask = await todoListService.CreateTask(basicTask, cancellationToken);
 
             //assert                       
             Assert.False(createdTask.Completed);
