@@ -10,14 +10,15 @@ namespace Application.Handlers.GetTasks
 {
     public class GetPendingTaskCommandHandler : IRequestHandler<GetPendingTaskCommand, List<TodoTask>>
     {
-        ITodoTaskRepository _todoTaskRepository;
-        public GetPendingTaskCommandHandler(ITodoTaskRepository todoTaskRepository)
+        private readonly ITodoTasksService _todoTasksService; // ITodoTasksService
+        public GetPendingTaskCommandHandler(ITodoTasksService todoTasksService)
         {
-            _todoTaskRepository = todoTaskRepository;
+            _todoTasksService = todoTasksService;
         }
+        
         public Task<List<TodoTask>> Handle(GetPendingTaskCommand request, CancellationToken cancellationToken)
         {
-            return _todoTaskRepository.GetPendingTasks();
+            return _todoTasksService.GetPendingsTasks();
         }
     }
 }

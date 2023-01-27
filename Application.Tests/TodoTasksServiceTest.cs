@@ -3,6 +3,7 @@ using Moq;
 using Application.Handlers.CreateCommands;
 using MediatR;
 using Microsoft.VisualBasic;
+using Application.Handlers.GetTasks;
 
 namespace Application.Tests
 {
@@ -35,6 +36,7 @@ namespace Application.Tests
                 Completed = false
             };
 
+            
             mockedTodoService.Setup(x => x.CreateTask(It.IsAny<BasicTask>(), It.IsAny<CancellationToken>())).ReturnsAsync(todoTask);
             var handler = new CreateTaskCommandHandler(mockedTodoService.Object);
             var CancellationToken =  new CancellationToken();
@@ -49,46 +51,40 @@ namespace Application.Tests
             Assert.Equal(basicTask.DueDate, result.DueDate);
         }
 
-        //[Fact]
-        //public async Task Handle_creates_a_task()
-        //{
-        //    //Arrange
-        //    var basicTask = new BasicTask
-        //    {
-        //        Title = "MediarR new basicTask",
-        //        DueDate = DateTime.Now.AddDays(1)
-        //    };
-        //    var todoTask = new TodoTask
-        //    {
-        //        Id = 1,
-        //        Title = basicTask.Title,
-        //        DueDate = basicTask.DueDate,
-        //        Completed = false
+        [Fact]
+        public async Task GetPendingTasksCommand_ShouldGetPendingTask()
+        {
+            //Arrange
+            var title = "Test meidiatR task";
+            var dueDate = DateTime.Now.AddDays(1);
+            var request = new CreateTaskCommand(title, dueDate);
 
-        //    };
-            
-        //    var mockMediator = new Mock<IMediator>();
-        //    var createTaskCommand = new CreateTaskCommand("new task by MeditR", DateTime.Now.AddDays(1));            
-            
-        //    mockedTodoService.Setup(x => x.CreateTask( It.IsAny<BasicTask>(),CancellationToken.None)).Returns(Task.FromResult(new TodoTask())); 
-            
-        //    mockedTodoRepository.Setup(x => x.AddTask(It.IsAny<TodoTask>())).Returns(Task.FromResult(new TodoTask()));
-            
-            
-        //    var handler = new CreateTaskCommandHandler(mockedTodoService.Object);
-        //    var token = new CancellationToken(); 
-        //    //Act 
-        //    var result = await handler.Handle(createTaskCommand, token);
+            var taskList = new List<TodoTask>()
+            {
 
-        //    //Assert
-        //    mockedTodoService.Verify(x => x.CreateTask(It.IsAny<BasicTask>(), CancellationToken.None)); 
-        //    Assert.NotNull(result);
-        //    Assert.Equal(createTaskCommand.Title, result.Title);
-        //    Assert.Equal(createTaskCommand.DueDate, result.DueDate);
-        //}
+               new TodoTask
+                {
+                    Id = 1,
+                    Title = title,
+                    DueDate = dueDate,
+                    Completed = false
+                }
+            };
+            var command = new GetPendingTaskCommand(); 
+            mockedTodoRepository.Setup(x => x.GetPendingTasks()).ReturnsAsync(taskList);             
+            var service =  new  TodoTasksService(mockedTodoRepository.Object);
+            var handler =  new  GetPendingTaskCommandHandler(service);
 
+            //Act
+            var result = await handler.Handle(command, CancellationToken.None);
 
-
+            //Assert 
+            Assert.NotNull(result);
+            Assert.IsType<List<TodoTask>>(result);
+            Assert.Equal(taskList, result);
+            mockedTodoRepository.Verify(x => x.GetPendingTasks(), Times.Once);             
+        }
+      
 
         [Fact]
         public async Task Creates_a_Task()
