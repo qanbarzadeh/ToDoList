@@ -9,6 +9,8 @@ using System.Text.Json;
 using System.Net;
 using MediatR; // MediatR
 using Application.Handlers.GetTasks;
+using Application.Registrars;
+using Application.Handlers.CreateCommands;
 
 namespace ToDoList
 {
@@ -20,6 +22,7 @@ namespace ToDoList
 
             // Add services to the container            
             
+            MediatRRegistrar.Register(builder.Services); 
             builder.Services.AddTodoTaskServices();
             builder.Services.AddTodoTaskRepositories();
 
@@ -36,44 +39,67 @@ namespace ToDoList
 
             app.UseSwagger();
             app.UseSwaggerUI();
-
-
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-          
+
             //Create a Todo Task
-            app.MapPost("/todoTasks", async (ITodoTasksService todoTaskService,BasicTask creatTask, CancellationToken cancellationToken) =>
+            app.MapPost("crateToDoTaskEndPoint", async (IMediator mediator, CreateTaskCommand command ,CancellationToken cancellationToken) =>
             {
-               var task = await todoTaskService.CreateTask(creatTask, cancellationToken);
-                return Results.Created($"/todolist/{task.Id}", task);
-            });
-
-            ////Get list of pending tasks        
-            app.MapGet("/pendingTasks", async (ITodoTasksService todoTaskService, CancellationToken token) =>
-            {
-                
-                var pendingTasks = await todoTaskService.GetPendingsTasks();
-                if(pendingTasks == null || pendingTasks.Count == 0 )
-                {
-                    return Results.Content("There were no pending tasks!"); 
-
-                }
-                return Results.Json(pendingTasks);
-                    
+                var task = await mediator.Send(command, cancellationToken);
+                return Results.Created($"/todolist/{task.Id}",task); 
             }); 
-            
-            //Get list of overdue tasks
-            app.MapGet("/todoTasks/overdue", async (ITodoTasksService todoTaskService, CancellationToken cancellationToken) =>
+
+                                                           
+            ////Get list of pending tasks        
+            ///using Mediator 
+            app.MapGet("/pendingTasks", async (IMediator mediator, CancellationToken token) =>
             {
-                var overdueTasks = await todoTaskService.GetOverDueTasks();
-                if(overdueTasks == null || overdueTasks.Count == 0 )
+                var pendingTasks = await mediator.Send(new GetPendingTaskCommand(), token);
+                if (pendingTasks == null || pendingTasks.Count == 0)
                 {
-                    return Results.Content("There were no overdue tasks!"); 
+                    return Results.Content("There were no pending tasks!");
+
                 }
-                return Results.Ok(overdueTasks);
+                return Results.Json(pendingTasks); 
             });
 
+            //app.MapGet("/pendingTasks", async (ITodoTasksService todoTaskService, CancellationToken token) =>
+            //{
+
+            //    var pendingTasks = await todoTaskService.GetPendingsTasks();
+            //    if(pendingTasks == null || pendingTasks.Count == 0 )
+            //    {
+            //        return Results.Content("There were no pending tasks!"); 
+
+            //    }
+            //    return Results.Json(pendingTasks);
+
+            //}); 
+
+            app.MapGet("getoverdue", async (IMediator mediator, CancellationToken token) =>
+            {
+                var overdueTasks = await mediator.Send(new GetOverDueTaskCommand(), token);
+                if (overdueTasks == null || overdueTasks.Count == 0)
+                {
+                    return Results.Content("There were no overdue tasks!");
+
+                }
+                return Results.Json(overdueTasks);
+            });
+
+            ////Get list of overdue tasks
+            //app.MapGet("/todoTasks/overdue", async (ITodoTasksService todoTaskService, CancellationToken cancellationToken) =>
+            //{
+            //    var overdueTasks = await todoTaskService.GetOverDueTasks();
+            //    if(overdueTasks == null || overdueTasks.Count == 0 )
+            //    {
+            //        return Results.Content("There were no overdue tasks!"); 
+            //    }
+            //    return Results.Ok(overdueTasks);
+            //});
+
+
+            //update a task
             app.MapPut("/todoTasks", async (ITodoTasksService todoTaskService, TodoTask task, CancellationToken token) =>
             {
                 var updatedTask = await todoTaskService.UpdateTask(task);
