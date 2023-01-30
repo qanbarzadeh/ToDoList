@@ -4,6 +4,7 @@ using Application.Handlers.CreateCommands;
 using MediatR;
 using Microsoft.VisualBasic;
 using Application.Handlers.GetTasks;
+using Application.Handlers.GetCommands;
 
 namespace Application.Tests
 {
@@ -83,6 +84,36 @@ namespace Application.Tests
             Assert.IsType<List<TodoTask>>(result);
             Assert.Equal(taskList, result);
             mockedTodoRepository.Verify(x => x.GetPendingTasks(), Times.Once);             
+        }
+
+        [Fact]
+        public async void GetOverDueTaskCommand_ShouldGetOverDueTasks()
+        {
+            //Arrange 
+            var todoList = new List<TodoTask>()
+            {
+                new TodoTask
+                {
+                    Id = 1,
+                    Title = "Test meidiatR GetOverdueCommandhandler",
+                    DueDate = DateTime.Now.AddDays(-1),
+                    Completed = false
+                }
+            };
+            //mock repo 
+            mockedTodoRepository.Setup(x => x.GetOverDueTasks()).ReturnsAsync(todoList);
+            var service = new TodoTasksService(mockedTodoRepository.Object);
+            var handler = new GetOverdueTaskCommandHandler(service);
+            var command = new GetOverDueTaskCommand();
+
+            //Act
+
+            var result = await handler.Handle(command, CancellationToken.None);
+
+            //Assert
+            mockedTodoRepository.Verify(x => x.GetOverDueTasks(), Times.Once);
+            Assert.NotNull(result);
+            Assert.Equal(todoList, result);                        
         }
       
 
