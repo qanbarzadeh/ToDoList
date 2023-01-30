@@ -16,7 +16,7 @@ namespace ToDoList
 {
     public class Program
     {
-        public static async void Main(string[] args)
+        public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -43,9 +43,9 @@ namespace ToDoList
             app.UseAuthorization();
 
             //Create a Todo Task
-            app.MapPost("crateToDoTaskEndPoint", async (IMediator mediator, CreateTaskCommand command ,CancellationToken cancellaationToken) =>
+            app.MapPost("crateToDoTaskEndPoint", async (IMediator mediator, CreateTaskCommand command ,CancellationToken cancellationToken) =>
             {
-                var task = await mediator.Send(command, cancellaationToken);
+                var task = await mediator.Send(command, cancellationToken);
                 return Results.Created($"/todolist/{task.Id}",task); 
             }); 
 
