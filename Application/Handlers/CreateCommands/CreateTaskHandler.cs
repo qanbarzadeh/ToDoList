@@ -3,11 +3,11 @@ using MediatR; // MediatR
 
 namespace Application.Handlers.CreateCommands
 {
-    public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, TodoTask>
+    public class CreateTaskHandler : IRequestHandler<CreateTaskCommand, TodoTask>
     {
         private readonly ITodoTasksService _todoTaskService;
 
-        public CreateTaskCommandHandler(ITodoTasksService todoTasksService)
+        public CreateTaskHandler(ITodoTasksService todoTasksService)
         {
             _todoTaskService = todoTasksService;
         }

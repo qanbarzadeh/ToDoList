@@ -50,7 +50,7 @@ namespace Application.Tests
             return await todoTaskRepository.GetOverDueTasks();
         }    
         
-        public async Task<TodoTask> UpdateTask(TodoTask updatingTask)
+        public async Task<TodoTask> UpdateTask(TodoTask updatingTask,CancellationToken cancellationToken)
         {                     
            return await todoTaskRepository.UpdateTask(updatingTask);           
         }
