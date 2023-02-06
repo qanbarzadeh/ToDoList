@@ -11,6 +11,7 @@ using MediatR; // MediatR
 using Application.Handlers.GetTasks;
 using Application.Registrars;
 using Application.Handlers.CreateCommands;
+using Application.Handlers.Update;
 
 namespace ToDoList
 {
@@ -100,14 +101,18 @@ namespace ToDoList
 
 
             //update a task
-            
+            app.MapPut("/updateTask", async (IMediator mediator, UpdateTaskCommand command, CancellationToken cancellationToken) =>
+            {
+                var task = await mediator.Send(command, cancellationToken);
+                return Results.Ok(task);
+            });
 
             //app.MapPut("/todoTasks", async (ITodoTasksService todoTaskService, TodoTask task, CancellationToken token) =>
             //{
             //    var updatedTask = await todoTaskService.UpdateTask(task) ;
             //    return Results.Ok(updatedTask);
             //});          
-            
+
             app.Run();
         }
     }
