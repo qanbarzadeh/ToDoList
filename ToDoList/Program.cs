@@ -11,6 +11,7 @@ using MediatR; // MediatR
 using Application.Handlers.GetTasks;
 using Application.Registrars;
 using Application.Handlers.CreateCommands;
+using Application.Handlers.Update;
 
 namespace ToDoList
 {
@@ -54,7 +55,7 @@ namespace ToDoList
             ///using Mediator 
             app.MapGet("/pendingTasks", async (IMediator mediator, CancellationToken token) =>
             {
-                var pendingTasks = await mediator.Send(new GetPendingTaskCommand(), token);
+                var pendingTasks = await mediator.Send(new GetPendingTaskQuery(), token);
                 if (pendingTasks == null || pendingTasks.Count == 0)
                 {
                     return Results.Content("There were no pending tasks!");
@@ -78,7 +79,7 @@ namespace ToDoList
 
             app.MapGet("getoverdue", async (IMediator mediator, CancellationToken token) =>
             {
-                var overdueTasks = await mediator.Send(new GetOverDueTaskCommand(), token);
+                var overdueTasks = await mediator.Send(new GetOverDueTaskQuery(), token);
                 if (overdueTasks == null || overdueTasks.Count == 0)
                 {
                     return Results.Content("There were no overdue tasks!");
@@ -96,15 +97,22 @@ namespace ToDoList
             //        return Results.Content("There were no overdue tasks!"); 
             //    }
             //    return Results.Ok(overdueTasks);
-            //});
+            //});0
 
 
             //update a task
-            app.MapPut("/todoTasks", async (ITodoTasksService todoTaskService, TodoTask task, CancellationToken token) =>
+            app.MapPut("/updateTask", async (IMediator mediator, UpdateTaskCommand command, CancellationToken cancellationToken) =>
             {
-                var updatedTask = await todoTaskService.UpdateTask(task);
-                return Results.Ok(updatedTask);
-            });          
+                var task = await mediator.Send(command, cancellationToken);
+                return Results.Ok(task);
+            });
+
+            //app.MapPut("/todoTasks", async (ITodoTasksService todoTaskService, TodoTask task, CancellationToken token) =>
+            //{
+            //    var updatedTask = await todoTaskService.UpdateTask(task) ;
+            //    return Results.Ok(updatedTask);
+            //});          
+
             app.Run();
         }
     }

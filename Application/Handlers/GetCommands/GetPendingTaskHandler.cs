@@ -8,15 +8,15 @@ using MediatR;
 
 namespace Application.Handlers.GetTasks
 {
-    public class GetPendingTaskCommandHandler : IRequestHandler<GetPendingTaskCommand, List<TodoTask>>
+    public class GetPendingTaskHandler : IRequestHandler<GetPendingTaskQuery, List<TodoTask>>
     {
         private readonly ITodoTasksService _todoTasksService; // ITodoTasksService
-        public GetPendingTaskCommandHandler(ITodoTasksService todoTasksService)
+        public GetPendingTaskHandler(ITodoTasksService todoTasksService)
         {
             _todoTasksService = todoTasksService;
         }
         
-        public Task<List<TodoTask>> Handle(GetPendingTaskCommand request, CancellationToken cancellationToken)
+        public Task<List<TodoTask>> Handle(GetPendingTaskQuery request, CancellationToken cancellationToken)
         {
             return _todoTasksService.GetPendingsTasks();
         }

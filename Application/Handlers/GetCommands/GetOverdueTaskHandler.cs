@@ -9,15 +9,15 @@ using MediatR; // MediatR
 
 namespace Application.Handlers.GetCommands
 {
-    public class GetOverdueTaskCommandHandler : IRequestHandler<GetOverDueTaskCommand, List<TodoTask>>
+    public class GetOverdueTaskHandler : IRequestHandler<GetOverDueTaskQuery, List<TodoTask>>
     {
         private readonly ITodoTasksService _todoTaskService;
-        public GetOverdueTaskCommandHandler(ITodoTasksService todoTaskService)
+        public GetOverdueTaskHandler(ITodoTasksService todoTaskService)
         {
             _todoTaskService = todoTaskService;
         }
     
-        public async Task<List<TodoTask>> Handle(GetOverDueTaskCommand request, CancellationToken cancellationToken)
+        public async Task<List<TodoTask>> Handle(GetOverDueTaskQuery request, CancellationToken cancellationToken)
         {
             return await _todoTaskService.GetOverDueTasks();
         }

@@ -1,5 +1,6 @@
 ﻿using Application.Handlers.CreateCommands;
 using Application.Handlers.GetTasks;
+using Application.Handlers.Update;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -15,10 +16,11 @@ namespace Application.Registrars
     {
         public static void Register(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddMediatR(typeof(GetPendingTaskCommand).Assembly);
-            serviceCollection.AddMediatR(typeof(GetOverDueTaskCommand).Assembly);
-            serviceCollection.AddMediatR(typeof(CreateTaskCommand).Assembly); 
-            //add the rest of MediatR requried classes 
+            serviceCollection.AddMediatR(typeof(GetPendingTaskQuery).Assembly);
+            serviceCollection.AddMediatR(typeof(GetOverDueTaskQuery).Assembly);
+            serviceCollection.AddMediatR(typeof(CreateTaskCommand).Assembly);
+            serviceCollection.AddMediatR(typeof(UpdateTaskCommand).Assembly);
+            
         }                
     }
 }

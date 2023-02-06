@@ -5,6 +5,8 @@ using MediatR;
 using Microsoft.VisualBasic;
 using Application.Handlers.GetTasks;
 using Application.Handlers.GetCommands;
+using Application.Handlers;
+using Application.Handlers.Update;
 
 namespace Application.Tests
 {
@@ -39,7 +41,7 @@ namespace Application.Tests
 
             
             mockedTodoService.Setup(x => x.CreateTask(It.IsAny<BasicTask>(), It.IsAny<CancellationToken>())).ReturnsAsync(todoTask);
-            var handler = new CreateTaskCommandHandler(mockedTodoService.Object);
+            var handler = new CreateTaskHandler(mockedTodoService.Object);
             var CancellationToken =  new CancellationToken();
 
             //Act
@@ -71,10 +73,10 @@ namespace Application.Tests
                     Completed = false
                 }
             };
-            var command = new GetPendingTaskCommand(); 
+            var command = new GetPendingTaskQuery(); 
             mockedTodoRepository.Setup(x => x.GetPendingTasks()).ReturnsAsync(taskList);             
             var service =  new  TodoTasksService(mockedTodoRepository.Object);
-            var handler =  new  GetPendingTaskCommandHandler(service);
+            var handler =  new  GetPendingTaskHandler(service);
 
             //Act
             var result = await handler.Handle(command, CancellationToken.None);
@@ -103,8 +105,8 @@ namespace Application.Tests
             //mock repo 
             mockedTodoRepository.Setup(x => x.GetOverDueTasks()).ReturnsAsync(todoList);
             var service = new TodoTasksService(mockedTodoRepository.Object);
-            var handler = new GetOverdueTaskCommandHandler(service);
-            var command = new GetOverDueTaskCommand();
+            var handler = new GetOverdueTaskHandler(service);
+            var command = new GetOverDueTaskQuery();
 
             //Act
 
@@ -198,6 +200,38 @@ namespace Application.Tests
                 Assert.False(t.Completed);
             });
         }
+
+        [Fact]
+        public async Task UpdateTodoCommand_Should_update_a_task()
+        {
+           //Arrange
+           var taskId = 1;
+            var updatedTitle = "Updated Title MediatR";
+            var updatedTask = new TodoTask()
+            {
+                Id = taskId,
+                Title = updatedTitle,
+                Completed = true,
+                DueDate = DateTime.Now.AddDays(1)
+            };
+
+            var command = new UpdateTaskCommand();            
+            mockedTodoRepository.Setup(x => x.UpdateTask(It.IsAny<TodoTask>())).Returns(Task.FromResult(updatedTask));
+            var service = new TodoTasksService(mockedTodoRepository.Object);
+            var handler = new UpdateTaskCommandHandler(service);
+
+            //Act 
+            var result = await handler.Handle(command, CancellationToken.None);
+
+            //Assert
+            mockedTodoRepository.Verify(x => x.UpdateTask(It.IsAny<TodoTask>()), Times.Once);
+            Assert.NotNull(result);
+            Assert.Equal(updatedTask, result);
+        }
+
+
+
+
         [Fact]
         public async Task Updates_a_Todo_Task()
         {
@@ -220,7 +254,7 @@ namespace Application.Tests
 
             //Action
             var todoTaskService = new TodoTasksService(mockedTodoRepository.Object);
-            var updated = await todoTaskService.UpdateTask(updatedTodoTask);
+            var updated = await todoTaskService.UpdateTask(updatedTodoTask,CancellationToken.None);
 
             //Assert
             Assert.True(updated.Id == 1);
@@ -249,8 +283,5 @@ namespace Application.Tests
             Assert.ThrowsAsync<ArgumentException>(() => todoTaskService.CreateTask(basicTask, cancellationToken));
             return Task.CompletedTask;
         }
-
     }
-
-
 }
