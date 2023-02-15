@@ -11,13 +11,12 @@ namespace Infrastructure.Tests
 
         public TodoRepositoryTest()
         {
+            var connectionString = "Data Source=(local);Initial Catalog=TodoDB;Integrated Security=True";
             var builder = new DbContextOptionsBuilder<TodoDbContext>();
-            builder.UseInMemoryDatabase("AddsTaskToDatabase");
-
+            builder.UseSqlServer(connectionString);            
             dbContext = new TodoDbContext(builder.Options);
             dbContext.Database.EnsureDeleted();
             dbContext.Database.EnsureCreated();
-
             repository = new TodoTaskRepository(dbContext);
         }
 
