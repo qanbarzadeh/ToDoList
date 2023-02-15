@@ -6,7 +6,10 @@ namespace Infrastructure.Repositories.ToDoList
 {
     public class TodoDbContext : DbContext
     {
-        public TodoDbContext(DbContextOptions<TodoDbContext> options) : base(options) { }
+        public TodoDbContext(DbContextOptions<TodoDbContext> options) : base(options) {
+
+            Database.EnsureCreated();
+        }
         public DbSet<TodoTask> TodoTasks  => Set<TodoTask>();
        
         protected override void OnModelCreating(ModelBuilder modelBuilder)

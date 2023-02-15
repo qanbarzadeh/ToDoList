@@ -12,6 +12,7 @@ using Application.Handlers.GetTasks;
 using Application.Registrars;
 using Application.Handlers.CreateCommands;
 using Application.Handlers.Update;
+using Microsoft.Extensions.Configuration;
 
 namespace ToDoList
 {
@@ -19,17 +20,27 @@ namespace ToDoList
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
-
+            var builder = WebApplication.CreateBuilder(args);                        
             // Add services to the container            
-            
+
             MediatRRegistrar.Register(builder.Services); 
             builder.Services.AddTodoTaskServices();
             builder.Services.AddTodoTaskRepositories();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
+            });
 
             builder.Services.AddAuthorization();
-            builder.Services.AddDbContext<TodoDbContext>(opt => opt.UseInMemoryDatabase("ToDoListDb"));
-            //builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+            builder.Services.AddDbContext<TodoDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("localcs")));
+
+            //builder.Services.AddDatabaseDeveloperPageExceptionFilter();                
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -42,6 +53,7 @@ namespace ToDoList
             app.UseSwaggerUI();
             app.UseHttpsRedirection();
             app.UseAuthorization();
+            app.UseCors("AllowAll");
 
             //Create a Todo Task
             app.MapPost("crateToDoTaskEndPoint", async (IMediator mediator, CreateTaskCommand command ,CancellationToken cancellationToken) =>
